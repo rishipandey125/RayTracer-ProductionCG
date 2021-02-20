@@ -1,4 +1,7 @@
 #include <iostream>
+// perspective rendering: set origin and fire ray through viewport
+// orthogonal rendering: fire ray direct from each grid point in the viewport
+  //build viewport around camera origin
 void render_frame() {
   int image_width = 500;
   int image_height = 500;
