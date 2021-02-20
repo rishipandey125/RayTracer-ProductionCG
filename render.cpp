@@ -1,4 +1,5 @@
 #include <iostream>
+#include "vec.cpp"
 // perspective rendering: set origin and fire ray through viewport
 // orthogonal rendering: fire ray direct from each grid point in the viewport
   //build viewport around camera origin
