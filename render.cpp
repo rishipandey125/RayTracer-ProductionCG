@@ -5,7 +5,7 @@
   //build viewport around camera origin
 void render_frame() {
   int image_width = 500;
-  int image_height = 500;
+  int image_height = image_width;
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
