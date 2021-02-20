@@ -1,2 +1,2 @@
 g++ -std=c++11 main.cpp #compile raytracer
-./a.out #render frames
+./a.out > image.ppm #render frames
