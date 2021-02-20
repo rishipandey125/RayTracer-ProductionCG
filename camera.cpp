@@ -1,8 +1,8 @@
 #include "camera.h"
-
-camera::camera() {}
-
-camera::camera(point &camera_origin, point &camera_look_at, float &camera_focal_length, float &camera_aspect_ratio, float &camera_viewport_height) {
+camera::camera(){}
+camera::camera(point camera_origin, point camera_look_at,
+      float camera_focal_length, float camera_aspect_ratio,
+      float camera_viewport_height) {
   this->origin = camera_origin;
   this->look_at = camera_look_at;
   this->focal_length = camera_focal_length;
@@ -15,13 +15,13 @@ camera::camera(point &camera_origin, point &camera_look_at, float &camera_focal_
 
 }
 
-camera::ray cast_perspective_ray(float &u, float &v) {
+ray camera::cast_perspective_ray(float &u, float &v) {
   point viewport_point = this->lower_left_corner + (this->horizontal*u) + (this->vertical*v);
   vec direction = viewport_point-this->origin;
   return ray(this->origin,direction);
 }
 
-camera::ray cast_orthogonal_ray(float &u, float &v) {
+ray camera::cast_orthogonal_ray(float &u, float &v) {
   point lower_left_viewport_point = this->origin-(this->horizontal/2.0)-(this->vertical/2.0);
   point viewport_origin = lower_left_viewport_point + (this->horizontal*u) + (this->vertical*v);
   vec direction = viewport_origin-vec(0,0,1);
