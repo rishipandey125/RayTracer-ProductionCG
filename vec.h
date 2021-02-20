@@ -1,4 +1,4 @@
-#indef VEC_H
+#ifndef VEC_H
 #define VEC_H
 
 class vec {

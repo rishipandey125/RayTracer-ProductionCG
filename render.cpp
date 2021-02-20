@@ -9,9 +9,10 @@ void render_frame() {
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
-      int r = static_cast<int>(255*0.5);
-      int g = static_cast<int>(255*0.5);
-      int b = static_cast<int>(255*0.5);
+      color red(1.0,0,0);
+      int r = static_cast<int>(255*red.x);
+      int g = static_cast<int>(255*red.y);
+      int b = static_cast<int>(255*red.z);
       std::cout << r << ' ' << g << ' ' << b << '\n';
     }
   }

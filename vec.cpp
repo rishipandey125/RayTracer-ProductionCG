@@ -1,7 +1,5 @@
 #include "vec.h"
-#incude <cmath>
-using std::sqrt;
-
+#include <cmath>
 vec::vec() {
   this->x = 0.0f;
   this->y = 0.0f;
@@ -93,6 +91,6 @@ void vec::root() {
   this->z = sqrt(this->z);
 }
 
-void print() {
+void vec::print() {
   std::cout << "<" <<  this->x << "," << this->y << "," << this->z << ">" << std::endl;
 }
