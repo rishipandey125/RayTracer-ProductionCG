@@ -15,14 +15,13 @@ camera::camera(point &camera_origin, point &camera_look_at, float &camera_focal_
 
 }
 
-camera::ray get_perspective_ray(float &u, float &v) {
+camera::ray cast_perspective_ray(float &u, float &v) {
   point viewport_point = this->lower_left_corner + (this->horizontal*u) + (this->vertical*v);
   vec direction = viewport_point-this->origin;
   return ray(this->origin,direction);
 }
 
-camera::ray get_orthogonal_ray(float &u, float &v) {
-  //
+camera::ray cast_orthogonal_ray(float &u, float &v) {
   point lower_left_viewport_point = this->origin-(this->horizontal/2.0)-(this->vertical/2.0);
   point viewport_origin = lower_left_viewport_point + (this->horizontal*u) + (this->vertical*v);
   vec direction = viewport_origin-vec(0,0,1);
