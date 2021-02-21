@@ -31,9 +31,9 @@ color shading(point &hit_point, vec &normal_vector,point &point_light, color &ba
 }
 
 void render_frame() {
-  camera cam(point(0,0,0),point(0,0,-1),1,16/9,2);
+  camera cam(point(0,0,0),point(0,0,-1),1,1,2);
   point point_light(.5,1,0);
-  int image_width = 500;
+  int image_width = 1000;
   int image_height = (int)(image_width/cam.aspect_ratio);
   plane floor(point(-1,-1,-2),point(-1,1,-10),point(1,1,-10),point(1,-1,-2),color(1,0,0));
   sphere ball(point(0,0,-3),1,color(0,0,1));
@@ -43,7 +43,7 @@ void render_frame() {
     for (int i = 0; i < image_width; i++) {
       float u = float(i)/image_width;
       float v = float(j)/image_width;
-      ray casted_ray = cam.cast_orthogonal_ray(u,v);
+      ray casted_ray = cam.cast_perspective_ray(u,v);
       color shade;
       for (geometry *object : scene_geometry) {
         float t = object->hit(casted_ray);
