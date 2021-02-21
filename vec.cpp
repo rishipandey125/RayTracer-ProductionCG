@@ -38,7 +38,7 @@ vec vec::operator+(const vec &vector) {
   return vec(this->x+vector.x, this->y+vector.y, this->z+vector.z);
 }
 
-vec vec::operator-(const vec &vector) {
+vec vec::operator-(const vec &vector) const {
   return vec(this->x-vector.x, this->y-vector.y, this->z-vector.z);
 }
 

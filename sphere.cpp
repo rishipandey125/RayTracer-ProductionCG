@@ -2,9 +2,10 @@
 #include <cmath>
 sphere::sphere() {}
 
-sphere::sphere(point sphere_center, float sphere_radius) {
+sphere::sphere(point sphere_center, float sphere_radius, color geo_base_color) {
   this->center = sphere_center;
   this->radius = sphere_radius;
+  this->base_color = geo_base_color;
 }
 
 float sphere::hit(ray &casted_ray) const {

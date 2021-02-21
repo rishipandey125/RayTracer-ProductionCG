@@ -2,7 +2,8 @@
 
 ray::ray() {}
 
-ray::ray(const point &ray_origin, const vec &ray_direction) {
+ray::ray(const point &ray_origin, vec &ray_direction) {
+  ray_direction.unit();
   this->origin = ray_origin;
   this->direction = ray_direction;
 }

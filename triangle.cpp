@@ -1,13 +1,14 @@
 #include "triangle.h"
 triangle::triangle() {}
 
-triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3) {
+triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, color geo_base_color) {
   this->vertex1 = tri_vertex1;
   this->vertex2 = tri_vertex2;
   this->vertex3 = tri_vertex3;
   this->edge1 = this->vertex2-this->vertex1;
   this->edge2 = this->vertex3-this->vertex1;
-  this->normal_vector = edge1.cross(edge2);
+  this->normal_vector = (this->edge1).cross(this->edge2);
+  this->base_color = geo_base_color;
 }
 
 float triangle::hit(ray &casted_ray) const {
