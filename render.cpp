@@ -8,6 +8,7 @@
 #include "plane.cpp"
 #include <vector>
 
+
 color blinn_phong_shading(point &hit_point, vec &normal_vector,point &point_light, color &base_color) {
   vec light_vector = point_light-hit_point;
   light_vector.unit();
@@ -23,7 +24,7 @@ void render_frame() {
   int image_width = 500;
   int image_height = (int)(image_width/cam.aspect_ratio);
   plane floor(point(-1,-1,-2),point(-1,1,-10),point(1,1,-10),point(1,-1,-2),color(1,0,0));
-  sphere ball(point(0,0,-3),2,color(0,0,1));
+  sphere ball(point(0,0,-3),1,color(0,0,1));
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   std::vector<geometry*> scene_geometry = {&floor,&ball};
   for (int j = image_height-1; j >= 0; j--) {
@@ -38,7 +39,6 @@ void render_frame() {
           point hit_point = casted_ray.get_point_at(t);
           vec normal = object->get_normal_vector(hit_point);
           normal.unit();
-          // shade = object->get_base_color();
           color base_color = object->get_base_color();
           shade = blinn_phong_shading(hit_point,normal,point_light,base_color);
         }
