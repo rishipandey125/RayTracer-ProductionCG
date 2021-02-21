@@ -2,6 +2,7 @@
 #define GEOMETRY_H
 #include "vec.h"
 #include "ray.h"
+//Geometry Parent Class: Virtual Functions Overriden by Geometry Children (Sphere,Plane,Triangle)
 class geometry {
   public:
     virtual float hit(ray &casted_ray) const = 0;

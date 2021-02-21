@@ -1,6 +1,14 @@
 #include "triangle.h"
+//Triangle Class
+
+//Default Constructor
 triangle::triangle() {}
 
+/*
+Specific Constructor:
+@param tri_vertex1, tri_vertex2, tri_vertex3: vertices of triangle
+@param geo_base_color: base color of triangle
+*/
 triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, color geo_base_color) {
   this->vertex1 = tri_vertex1;
   this->vertex2 = tri_vertex2;
@@ -11,6 +19,11 @@ triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, colo
   this->base_color = geo_base_color;
 }
 
+/*
+Hit Function for Triangle:
+@param casted_ray: ray casted at geometry
+@return: -1 for no hit, and t (parametric value on ray) for a hit
+*/
 float triangle::hit(ray &casted_ray) const {
   float epsilon = 0.0000001;
   vec h = (casted_ray.direction).cross(this->edge2);
@@ -36,13 +49,15 @@ float triangle::hit(ray &casted_ray) const {
   return -1.0;
 }
 
+/*
+Getting the Normal Vector of the Triangle
+@return: normal vector
+*/
 vec triangle::get_normal_vector(point &point_on_triangle) const {
-  // vec vector1 = this->vertex2-this->vertex1;
-  // vec vector2 = this->vertex3-this->vertex2;
-  // return vector1.cross(vector2);
   return this->normal_vector;
 }
 
+//returns the base color of the triangle
 color triangle::get_base_color() const {
   return this->base_color;
 }

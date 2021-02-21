@@ -3,16 +3,21 @@
 #include "geometry.h"
 #include "ray.h"
 #include "vec.h"
+//Header File for Triangle Class
 class triangle : public geometry {
   public:
+    //Constructors
     triangle();
     triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, color geo_base_color);
+    //Geometry Functions
     float hit(ray &casted_ray) const override;
     vec get_normal_vector(point &point_on_triangle) const override;
     color get_base_color() const override;
+    //Verticies
     point vertex1;
     point vertex2;
     point vertex3;
+    //Computed Vectors
     vec edge1;
     vec edge2;
     vec normal_vector;
