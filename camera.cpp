@@ -24,7 +24,7 @@ ray camera::cast_perspective_ray(float &u, float &v) {
 }
 
 ray camera::cast_orthogonal_ray(float &u, float &v) {
-  point lower_left_viewport_point = this->origin-(this->horizontal/2.0)-(this->vertical/2.0);
+  point lower_left_viewport_point = this->lower_left_corner+vec(0,0,this->focal_length);
   point viewport_origin = lower_left_viewport_point + (this->horizontal*u) + (this->vertical*v);
   vec direction = viewport_origin-vec(0,0,1);
   return ray(viewport_origin,direction);
