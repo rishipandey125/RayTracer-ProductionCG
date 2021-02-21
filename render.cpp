@@ -8,11 +8,23 @@
 #include "plane.cpp"
 #include <vector>
 
+const float EPSILON = 0.0001;
 
-color blinn_phong_shading(point &hit_point, vec &normal_vector,point &point_light, color &base_color) {
+color shading(point &hit_point, vec &normal_vector,point &point_light, color &base_color, std::vector<geometry*> scene_geometry) {
   vec light_vector = point_light-hit_point;
   light_vector.unit();
+  vec epsilon(EPSILON,EPSILON,EPSILON);
+  ray shadow_ray(hit_point+epsilon,light_vector);
+  float shadow = 0.15;
+  for (geometry *object : scene_geometry) {
+    float t = object->hit(shadow_ray);
+    if (t > 0.0) {
+      shadow = 0.0;
+      break;
+    }
+  }
   float diffuse = normal_vector.dot(light_vector);
+  diffuse += shadow;
   color shade = base_color * diffuse;
   shade.clamp();
   return shade;
@@ -20,7 +32,7 @@ color blinn_phong_shading(point &hit_point, vec &normal_vector,point &point_ligh
 
 void render_frame() {
   camera cam(point(0,0,0),point(0,0,-1),1,16/9,2);
-  point point_light(.2,.5,0);
+  point point_light(.5,1,0);
   int image_width = 500;
   int image_height = (int)(image_width/cam.aspect_ratio);
   plane floor(point(-1,-1,-2),point(-1,1,-10),point(1,1,-10),point(1,-1,-2),color(1,0,0));
@@ -31,7 +43,7 @@ void render_frame() {
     for (int i = 0; i < image_width; i++) {
       float u = float(i)/image_width;
       float v = float(j)/image_width;
-      ray casted_ray = cam.cast_perspective_ray(u,v);
+      ray casted_ray = cam.cast_orthogonal_ray(u,v);
       color shade;
       for (geometry *object : scene_geometry) {
         float t = object->hit(casted_ray);
@@ -40,7 +52,7 @@ void render_frame() {
           vec normal = object->get_normal_vector(hit_point);
           normal.unit();
           color base_color = object->get_base_color();
-          shade = blinn_phong_shading(hit_point,normal,point_light,base_color);
+          shade = shading(hit_point,normal,point_light,base_color,scene_geometry);
         }
       }
       int r = static_cast<int>(255*shade.x);

@@ -11,7 +11,9 @@ camera::camera(point camera_origin, point camera_look_at,
   this->viewport_width = camera_viewport_height*camera_aspect_ratio;
   this->horizontal = vec(this->viewport_width,0,0);
   this->vertical = vec(0,this->viewport_height,0);
-  this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-vec(0,0,this->focal_length);
+  vec w = camera_origin-camera_look_at;
+  w.unit();
+  this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-vec(0,0,this->focal_length)-w;
 
 }
 
