@@ -23,7 +23,7 @@ void render_frame() {
   point point_light(.2,.5,0);
   int image_width = 500;
   int image_height = (int)(image_width/cam.aspect_ratio);
-  sphere object(point(0,0,-2),1,color(1,0,0));
+  triangle object(point(-1,-1,-2),point(-1,1,-10),point(1,1,-10),color(1,0,0));
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   color shade;
   for (int j = image_height-1; j >= 0; j--) {
@@ -37,8 +37,11 @@ void render_frame() {
         vec normal = object.get_normal_vector(hit_point);
         normal.unit();
         if (normal.dot(casted_ray.direction) < 0.0) {
+          // std::cout << "entered" << std::endl;
           normal = normal * -1.0;
         }
+        // normal.print();
+        // shade = object.base_color;
         shade = blinn_phong_shading(hit_point,normal,point_light,object.base_color);
       } else {
         shade = color(0,0,0);

@@ -70,17 +70,17 @@ bool vec::operator==(const vec &vector) {
 void vec::clamp() {
   if (this->x > 1.0) {
     this->x = 1.0;
-  } else if (this->x < 0.0) {
+  } else if (this->x <= 0.0) {
     this->x = 0.0;
   }
   if (this->y > 1.0) {
     this->y = 1.0;
-  } else if (this->y < 0.0) {
+  } else if (this->y <= 0.0) {
     this->y = 0.0;
   }
   if (this->z > 1.0) {
     this->z = 1.0;
-  } else if (this->z < 0.0) {
+  } else if (this->z <= 0.0) {
     this->z = 0.0;
   }
 }
