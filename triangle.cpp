@@ -5,44 +5,38 @@ triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3) {
   this->vertex1 = tri_vertex1;
   this->vertex2 = tri_vertex2;
   this->vertex3 = tri_vertex3;
+  this->edge1 = this->vertex2-this->vertex1;
+  this->edge2 = this->vertex3-this->vertex1;
+  this->normal_vector = edge1.cross(edge2);
 }
 
 float triangle::hit(ray &casted_ray) const {
-  /*
-  Define Epsilon: ep = 0.0000001
-  Define Edge 1 an Edge 2:
-  edge1 = vertex1-vertex0
-  edge2 = vertex2-vertex0
-  Define h vec:
-    h = (casted_ray.direction).cross(edge2)
-  define const a:
-    a = edge1.dot(h)
-  if (a > -Ep && a < Ep) (close to zero)
-    then no hit! rays are parallel
-  define const f:
-    f = 1.0/a
-  define vec s:
-    s = casted_ray.origin-vertex0
-  define const u:
-    u = f* s.dot(h)
-  if u < 0 or u > 1:
-    no hit!
-  q = s.cross(edge1)
-  v = f * (casted_ray.direction).dot(q)
-  if v < 0 || (u+v) > 1:
-    no hit!
-  compute t!
-  t = f * edge2.dot(q)
-  if t > ep:
-    hit!
-    return t
-  return no hit for good measure
-  */
-
+  float epsilon = 0.0000001;
+  vec h = (casted_ray.direction).cross(this->edge2);
+  float a = (this->edge1).dot(h);
+  if (a > (-1*epsilon) && a < epsilon) {
+    return -1;
+  }
+  float f = 1.0/a;
+  vec s = casted_ray.origin-this->vertex1;
+  float u = f * s.dot(h);
+  if (u < 0 || u > 1) {
+    return -1.0;
+  }
+  vec q = s.cross(this->edge1);
+  float v = f * (casted_ray.direction).dot(q);
+  if (v < 0 || (u+v) > 1) {
+    return -1.0;
+  }
+  float t = f * this->edge2.dot(q);
+  if (t > epsilon) {
+    return t;
+  }
+  return -1.0;
 }
 
 vec triangle::get_normal_vector(point &point_on_triangle) const {
-  vec vector1 = this->vertex2-this->vertex1;
-  vec vector2 = this->vertex3-this->vertex2;
-  return vector1.cross(vector2);
+  // vec vector1 = this->vertex2-this->vertex1;
+  // vec vector2 = this->vertex3-this->vertex2;
+  return this->normal_vector;
 }

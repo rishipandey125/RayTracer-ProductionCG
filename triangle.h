@@ -12,6 +12,9 @@ class triangle : public geometry {
     point vertex1;
     point vertex2;
     point vertex3;
+    vec edge1;
+    vec edge2;
+    vec normal_vector;
 };
 
 #endif

@@ -23,7 +23,7 @@ void vec::unit() {
   this->z = this->z/length;
 }
 
-float vec::dot(const vec &vector) {
+float vec::dot(const vec &vector) const {
   return (this->x * vector.x) + (this->y * vector.y) + (this->z * vector.z);
 }
 
