@@ -40,34 +40,38 @@ void render_frame() {
   triangle tri(point(.1,-1,-2),point(0.4,-1,-2),point(0.25,.6,-2),color(0,1,0));
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   std::vector<geometry*> scene_geometry = {&floor,&ball,&tri};
+  int samples = 64;
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
-      float u = float(i)/image_width;
-      float v = float(j)/image_width;
-      ray casted_ray = cam.cast_perspective_ray(u,v);
-      color shade;
-      //CLOSEST T BUG
-      float closest_t = float(RAND_MAX);
-      geometry * closest_geometry;
-      bool hit = false;
-      for (int i = 0; i < scene_geometry.size(); i++) {
-        float t = (scene_geometry[i])->hit(casted_ray);
-        if (t > 0.0 && t < closest_t) {
-          closest_geometry = scene_geometry[i];
-          closest_t = t;
-          hit = true;
+      for (int s = 0; s < samples; s++) {
+        float u = float(i)+/image_width;
+        float v = float(j)/image_width;
+        ray casted_ray = cam.cast_perspective_ray(u,v);
+        color shade;
+        //CLOSEST T BUG
+        float closest_t = float(RAND_MAX);
+        geometry * closest_geometry;
+        bool hit = false;
+        for (int i = 0; i < scene_geometry.size(); i++) {
+          float t = (scene_geometry[i])->hit(casted_ray);
+          if (t > 0.0 && t < closest_t) {
+            closest_geometry = scene_geometry[i];
+            closest_t = t;
+            hit = true;
+          }
+        }
+        if (hit) {
+          point hit_point = casted_ray.get_point_at(closest_t);
+          vec normal = (closest_geometry)->get_normal_vector(hit_point);
+          if (normal.dot(casted_ray.direction) > 0.0) {
+            normal = normal * -1.0;
+          }
+          normal.unit();
+          color base_color = (closest_geometry)->get_base_color();
+          shade = shading(hit_point,normal,point_light,base_color,scene_geometry);
         }
       }
-      if (hit) {
-        point hit_point = casted_ray.get_point_at(closest_t);
-        vec normal = (closest_geometry)->get_normal_vector(hit_point);
-        if (normal.dot(casted_ray.direction) > 0.0) {
-          normal = normal * -1.0;
-        }
-        normal.unit();
-        color base_color = (closest_geometry)->get_base_color();
-        shade = shading(hit_point,normal,point_light,base_color,scene_geometry);
-      }
+
 
       int r = static_cast<int>(255*shade.x);
       int g = static_cast<int>(255*shade.y);
