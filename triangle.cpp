@@ -7,7 +7,7 @@ triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, colo
   this->vertex3 = tri_vertex3;
   this->edge1 = this->vertex2-this->vertex1;
   this->edge2 = this->vertex3-this->vertex1;
-  this->normal_vector = ((this->edge1).cross(this->edge2))*-1.0;
+  this->normal_vector = ((this->edge1).cross(this->edge2));
   this->base_color = geo_base_color;
 }
 

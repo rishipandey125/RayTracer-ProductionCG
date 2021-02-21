@@ -8,7 +8,7 @@ plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, poin
   this->vertex4 = plane_vertex4;
   this->edge1 = this->vertex2-this->vertex1;
   this->edge2 = this->vertex3-this->vertex1;
-  this->normal_vector = ((this->edge1).cross(this->edge2))*-1.0;
+  this->normal_vector = ((this->edge1).cross(this->edge2));
   this->base_color = geo_base_color;
 }
 
