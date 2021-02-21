@@ -23,3 +23,7 @@ float sphere::hit(ray &casted_ray) const {
 vec sphere::get_normal_vector(point &point_on_sphere) const {
   return point_on_sphere-this->center;
 }
+
+color sphere::get_base_color() const {
+  return this->base_color;
+}

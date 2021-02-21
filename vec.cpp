@@ -52,7 +52,7 @@ vec vec::operator*(const vec &vector) {
   return vec(this->x*vector.x, this->y*vector.y, this->z*vector.z);
 }
 
-vec vec::operator*(const float &scalar) {
+vec vec::operator*(const float &scalar) const {
   return vec(this->x*scalar, this->y*scalar, this->z*scalar);
 }
 

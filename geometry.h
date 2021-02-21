@@ -6,6 +6,7 @@ class geometry {
   public:
     virtual float hit(ray &casted_ray) const = 0;
     virtual vec get_normal_vector(point &point_on_surface) const = 0;
+    virtual color get_base_color() const = 0;
 };
 
 #endif

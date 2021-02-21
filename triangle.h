@@ -9,6 +9,7 @@ class triangle : public geometry {
     triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, color geo_base_color);
     float hit(ray &casted_ray) const override;
     vec get_normal_vector(point &point_on_triangle) const override;
+    color get_base_color() const override;
     point vertex1;
     point vertex2;
     point vertex3;
