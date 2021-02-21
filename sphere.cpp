@@ -19,6 +19,6 @@ float sphere::hit(ray &casted_ray) const {
   return -1.0;
 }
 
-vec sphere::get_normal_vector(point &point_on_sphere) {
+vec sphere::get_normal_vector(point &point_on_sphere) const {
   return point_on_sphere-this->center;
 }
