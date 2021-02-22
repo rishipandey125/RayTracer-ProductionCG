@@ -79,21 +79,42 @@ void render_frame() {
   //Number of Samples per Pixel
   int samples = 16;
   int sqrt_samples = sqrt(float(samples));
-  float step_size = 1.0/float(sqrt_samples);
+  //Creating Canonical Arrangement: From Pixar Paper (Correlated Multi-Jitter Sampling)
+  float canonical[sqrt_samples][sqrt_samples][2];
+  float n = float(sqrt_samples);
+  for (int j = 0; j < sqrt_samples; j++) {
+    for (int i = 0; i < sqrt_samples; i++) {
+      canonical[j][i][0] = (i + (j+random_float())/n)/n;
+      canonical[j][i][1] = (j + (i+random_float())/n)/n;
+    }
+  }
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
       color shade; //initializes shade color to (0,0,0) which is black - the background
-      //multi-jitter sampling - iterate through each sub-square
+      //multi-jitter sampling - shuffle canonical arrangement
+      //preserving n-rooks
+      for (int y = 0; y < sqrt_samples; y++) {
+        for (int x = 0; x < sqrt_samples; x++) {
+          int k = y + random_float() * (sqrt_samples-y);
+          std::swap(canonical[y][x][0],canonical[k][x][0]);
+        }
+      }
+      for (int x = 0; x < sqrt_samples; x++) {
+        for (int y = 0; y < sqrt_samples; y++) {
+          int k = x + random_float() * (sqrt_samples-x);
+          std::swap(canonical[y][x][1],canonical[y][k][1]);
+        }
+      }
+      //n-rooks preserved next step...
+      //fire rays for samples
       for (int ys = 0; ys < sqrt_samples; ys++) {
         for (int xs = 0; xs < sqrt_samples; xs++) {
-          //one random sample in the sub-square
-          float random_u = random_float(xs*step_size,(xs+1)*step_size);
-          float random_v = random_float(ys*step_size,(ys+1)*step_size);
-          float u = (float(i)+random_u)/image_width;
-          float v = (float(j)+random_v)/image_width;
+          //use the multi-jitter shuffled samples
+          float u = (float(i)+canonical[ys][xs][0])/image_width;
+          float v = (float(j)+canonical[ys][xs][0])/image_width;
           //cast ray into the scene
-          ray casted_ray = cam.cast_orthogonal_ray(u,v);
+          ray casted_ray = cam.cast_perspective_ray(u,v);
           float closest_t = float(RAND_MAX);
           geometry * closest_geometry;
           bool hit = false;
