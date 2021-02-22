@@ -93,7 +93,7 @@ void render_frame() {
           float u = (float(i)+random_u)/image_width;
           float v = (float(j)+random_v)/image_width;
           //cast ray into the scene
-          ray casted_ray = cam.cast_perspective_ray(u,v);
+          ray casted_ray = cam.cast_orthogonal_ray(u,v);
           float closest_t = float(RAND_MAX);
           geometry * closest_geometry;
           bool hit = false;

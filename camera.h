@@ -26,6 +26,7 @@ class camera {
     point lower_left_corner;
     vec horizontal;
     vec vertical;
+    vec w;
 
 };
 
