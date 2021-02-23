@@ -72,12 +72,13 @@ void render_frame() {
   //Creating Scene Geometry
   plane floor(point(-1,-1,-1),point(-1,1,-10),point(1,1,-10),point(1,-1,-1),color(1,0,0));
   sphere ball(point(0,0,-3),.5,color(0,0,1));
+  sphere ball2(point(-1,0,-3),.5,color(0,1,1));
   triangle tri(point(.1,-1,-2),point(0.4,-1,-2),point(0.25,.6,-2),color(0,1,0));
-  std::vector<geometry*> scene_geometry = {&floor,&ball,&tri};
+  std::vector<geometry*> scene_geometry = {&floor,&ball,&ball2,&tri};
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 16;
+  int samples = 64;
   int sqrt_samples = sqrt(float(samples));
   //Creating Canonical Arrangement: From Pixar Paper (Correlated Multi-Jitter Sampling)
   float canonical[sqrt_samples][sqrt_samples][2];
