@@ -12,3 +12,7 @@ float random_float() {
 float random_float(float min, float max) {
   return min + ((max-min)*random_float());
 }
+
+int random_int(int min, int max) {
+  return min + ((max-min)*(rand()/RAND_MAX));
+}

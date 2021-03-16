@@ -2,20 +2,29 @@
 
 bvh_node::bvh_node() {}
 
+point get_midpoint(std::vector<geometry*> &scene_geometry) {
+  point midpoint = point();
+  for (int i = 0; i < scene_geometry.size(); i++) {
+    centroid = scene_geometry[i]->bounding_box.centroid;
+    midpoint = midpoint + centroid;
+  }
+  midpoint = midpoint/scene_geometry.size();
+  return midpoint;
+}
+
 aabb geometry_box(std::vector<geometry*> &scene_geometry) {
   aabb output_box = scene_geometry[i]->bounding_box();
   for (int i = 1; i < scene_geometry.size(); i++) {
     output_box = output_box.surrounding_box(scene_geometry[i]);
-    // first_box = output_box;
   }
   return output_box;
 }
+
 //This is where we create the tree
 bvh_node::bvh_node(std::vector<geometry*> scene_geometry, int num_geo) {
   //if the data is less than num_geo then make a leaf
   aabb output_box = geometry_box(scene_geometry);
-  for (int i = 0)
-  if (scene_geometry.size() <= num_geo) {
+   if (scene_geometry.size() <= num_geo) {
     this->leaf_geometry = &scene_geometry;
     this->left = NULL;
     this->right = NULL
@@ -28,11 +37,13 @@ bvh_node::bvh_node(std::vector<geometry*> scene_geometry, int num_geo) {
     //partition the data and make a left and right node    this->left = bvh_node(left_scene_geometry, num_geo);
     std::vector<geometry*> left_scene_geometry;
     std::vector<geometry*> right_scene_geometry;
+    point midpoint = get_midpoint(scene_geometry);
+    int index = random_int(0,2);
     for (int i = 0; i < scene_geometry.size(); i++) {
-      if(scene_geometry[i]) {
-        left_scene_geometry.push_back(scene_geometry[i])
+      if (scene_geometry[i]->bounding_box.centroid[index] < midpoint[index]) {
+        left_scene_geometry.push_back(scene_geometry[i]);
       } else {
-        //right
+        right_scene_geometry.push_back(scene_geometry[i]);
       }
     }
     this->left =  bvh_node(left_scene_geometry,num_geo);

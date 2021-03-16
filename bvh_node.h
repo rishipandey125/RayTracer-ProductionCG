@@ -4,6 +4,7 @@
 #include "aabb.h"
 #include "ray.h"
 #include "vec.h"
+#include "random.cpp"
 #include <vector>
 
 class bvh_node public geometry {

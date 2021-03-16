@@ -3,6 +3,7 @@
 #include "geometry.h"
 #include "ray.h"
 #include "vec.h"
+#include "aabb.h"
 //Header File for Sphere Class
 class sphere : public geometry {
   public:
@@ -18,6 +19,7 @@ class sphere : public geometry {
     point center;
     float radius;
     color base_color;
+    aabb bounding_box;
 };
 
 #endif
