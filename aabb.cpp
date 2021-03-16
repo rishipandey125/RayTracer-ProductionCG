@@ -35,14 +35,14 @@ float aabb::hit(ray &casted_ray) const {
   return 1.0;
 }
 
-aabb aabb::surrounding_box(aabb &box1, aabb &box2) {
-  point min = point(fmin(box1.minimum.x,box2.minimum.x),
-  fmin(box1.minimum.y,box2.minimum.y),
-  fmin(box1.minimum.z,box2.minimum.z));
+aabb aabb::surrounding_box(aabb &box) {
+  point min = point(fmin(this->minimum.x,box.minimum.x),
+  fmin(this->minimum.y,box.minimum.y),
+  fmin(this->minimum.z,box.minimum.z));
 
-  point max = point(fmin(box1.maximum.x,box2.maximum.x),
-  fmin(box1.maximum.y,box2.maximum.y),
-  fmin(box1.maximum.z,box2.maximum.z));
+  point max = point(fmin(this->maximum.x,box.maximum.x),
+  fmin(this->maximum.y,box.maximum.y),
+  fmin(this->maximum.z,box.maximum.z));
 
   return aabb(min,max);
 }

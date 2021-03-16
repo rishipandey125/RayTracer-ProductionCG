@@ -10,7 +10,7 @@ class aabb {
     aabb(point a, point b);
     //Member Functions
     float hit(ray &casted_ray);
-    aabb surrounding_box(aabb &box1, aabb &box2);
+    aabb surrounding_box(aabb &box);
     //Member Variables
     point minimum;
     float maximum;
