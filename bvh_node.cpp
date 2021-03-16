@@ -5,12 +5,12 @@ bvh_node::bvh_node() {}
 //This is where we create the tree
 bvh_node::bvh_node(std::vector<geometry*> scene_geometry, int num_geo) {
   //if the data is less than num_geo then make a leaf
-  aabb output_box =
+  aabb output_box = aabb();
   if (scene_geometry.size() <= num_geo) {
     this->leaf_geometry = &scene_geometry;
     this->left = NULL;
     this->right = NULL
-    this->box =
+    this->box = output_box;
     //create a leaf
   } else {
     this->leaf_geometry = NULL;
@@ -19,6 +19,13 @@ bvh_node::bvh_node(std::vector<geometry*> scene_geometry, int num_geo) {
     //partition the data and make a left and right node    this->left = bvh_node(left_scene_geometry, num_geo);
     std::vector<geometry*> left_scene_geometry;
     std::vector<geometry*> right_scene_geometry;
+    for (int i = 0; i < scene_geometry.size(); i++) {
+      if(scene_geometry[i]) {
+        left_scene_geometry.push_back(scene_geometry[i])
+      } else {
+        //right
+      }
+    }
     this->left =  bvh_node(left_scene_geometry,num_geo);
     this->right = bvh_node(right_scene_geomtry, num_geo);
     //create a node

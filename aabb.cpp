@@ -3,7 +3,10 @@
 //AABB Class
 
 //Default Constructor
-aabb::aabb() {}
+aabb::aabb() {
+  this->minimum = vec();
+  this->maximum = vec();
+}
 
 /*
 Specific Constructor:
