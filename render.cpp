@@ -78,7 +78,7 @@ void render_frame() {
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 64;
+  int samples = 1;
   int sqrt_samples = sqrt(float(samples));
   //Creating Canonical Arrangement: From Pixar Paper (Correlated Multi-Jitter Sampling)
   float canonical[sqrt_samples][sqrt_samples][2];

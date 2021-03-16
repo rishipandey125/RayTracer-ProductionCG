@@ -18,6 +18,7 @@ class vec {
     vec operator*(const float &scalar) const;
     vec operator/(const float &scalar);
     bool operator==(const vec &vector);
+    float operator[] (const int index);
     //rgb clamp helper function
     void clamp();
     //extra function (only used in gamma correction currently)

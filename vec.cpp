@@ -119,6 +119,18 @@ bool vec::operator==(const vec &vector) {
   return false;
 }
 
+float vec::operator[](const int index) {
+  if (index == 0) {
+    return this->x;
+  } else if (index == 1) {
+    return this->y;
+  } else if (index == 2) {
+    return this->z;
+  }
+  std::cerr << "INDEX OUT OF BOUNDS FOR VEC[]" << std::endl;
+  throw 1;
+}
+
 /*
 Clamp Function
 Clamps the RGB values between 0 and 1
