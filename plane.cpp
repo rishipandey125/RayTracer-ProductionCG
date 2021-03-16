@@ -48,3 +48,9 @@ vec plane::get_normal_vector(point &point_on_plane) const {
 color plane::get_base_color() const {
   return this->base_color;
 }
+
+//NOT USED
+aabb triangle::bounding_box() const {
+  vec temp = vec();
+  return aabb(temp,temp);
+}

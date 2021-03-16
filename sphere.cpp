@@ -49,3 +49,10 @@ vec sphere::get_normal_vector(point &point_on_sphere) const {
 color sphere::get_base_color() const {
   return this->base_color;
 }
+
+aabb sphere:bounding_box() const {
+  float r = this->radius;
+  vec radius_vec = vec(r,r,r);
+  aabb bounding_box = aabb(this->center-radius_vec,this->center+radius_vec);
+  return bounding_box;
+}

@@ -14,6 +14,7 @@ class plane : public geometry {
     float hit(ray &casted_ray) const override;
     vec get_normal_vector(point &point_on_plane) const override;
     color get_base_color() const override;
+    aabb bounding_box() const override;
     //Plane Vertices
     point vertex1;
     point vertex2;

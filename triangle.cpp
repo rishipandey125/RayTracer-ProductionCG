@@ -61,3 +61,8 @@ vec triangle::get_normal_vector(point &point_on_triangle) const {
 color triangle::get_base_color() const {
   return this->base_color;
 }
+
+aabb triangle::bounding_box() const {
+  vec temp = vec();
+  return aabb(temp,temp);
+}

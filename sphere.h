@@ -13,6 +13,7 @@ class sphere : public geometry {
     float hit(ray &casted_ray) const override;
     vec get_normal_vector(point &point_on_sphere) const override;
     color get_base_color() const override;
+    aabb bounding_box() const override;
     //Member Functions
     point center;
     float radius;
