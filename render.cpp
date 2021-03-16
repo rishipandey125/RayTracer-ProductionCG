@@ -39,6 +39,7 @@ color shading(point &hit_point, vec &normal_vector,point &point_light, color &ba
   }
   float diffuse = normal_vector.dot(light_vector);
   diffuse += shadow;
+  //add specular component here
   color shade = base_color * diffuse;
   //clamping pixel values
   shade.clamp();
@@ -120,6 +121,9 @@ void render_frame() {
           geometry * closest_geometry;
           bool hit = false;
           //checking for a hit in the scene geometry
+          //go through the entire tree if you get to the bottom
+          // save the geometry at the bottom into a vector and pass that next
+          //otherwise skip that ray
           for (int i = 0; i < scene_geometry.size(); i++) {
             float t = (scene_geometry[i])->hit(casted_ray);
             //if there is a hit and it is closer than the one before it
