@@ -13,7 +13,9 @@ class aabb {
     aabb surrounding_box(aabb &box);
     //Member Variables
     point minimum;
-    float maximum;
+    point maximum;
+    point centroid;
+
 };
 
 #endif

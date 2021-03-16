@@ -6,6 +6,7 @@
 aabb::aabb() {
   this->minimum = vec();
   this->maximum = vec();
+  this->centroid = vec();
 }
 
 /*
@@ -16,6 +17,7 @@ Specific Constructor:
 aabb::aabb(point a, point b) {
   this->minimum = a;
   this->maximum = b;
+  this->centroid = (a+b)*0.5;
 }
 
 /*
