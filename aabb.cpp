@@ -25,7 +25,7 @@ Hit Function for AABB:
 @param casted_ray: ray casted at geometry
 @return: -1 for no hit, and 1 for hit
 */
-float aabb::hit(ray &casted_ray) {
+float aabb::check_hit(ray &casted_ray) {
   for (int i = 0; i < 3; i++) {
     float min_val = (this->minimum[i]-casted_ray.origin[i]) / casted_ray.direction[i];
     float max_val = (this->maximum[i]-casted_ray.origin[i]) / casted_ray.direction[i];

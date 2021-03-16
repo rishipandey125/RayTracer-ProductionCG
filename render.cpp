@@ -2,7 +2,7 @@
 #include "vec.cpp"
 #include "ray.cpp"
 #include "aabb.cpp"
-#include "bvh_node.cpp"
+#include "bvh.cpp"
 #include "camera.cpp"
 #include "geometry.h"
 #include "sphere.cpp"

@@ -50,7 +50,7 @@ color plane::get_base_color() const {
 }
 
 //NOT USED
-aabb triangle::bounding_box() const {
+aabb plane::bounding_box() const {
   vec temp = vec();
   return aabb(temp,temp);
 }

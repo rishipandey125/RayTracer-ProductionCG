@@ -19,7 +19,7 @@ class sphere : public geometry {
     point center;
     float radius;
     color base_color;
-    aabb bounding_box;
+    aabb bb;
 };
 
 #endif

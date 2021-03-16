@@ -17,7 +17,7 @@ sphere::sphere(point sphere_center, float sphere_radius, color geo_base_color) {
   this->base_color = geo_base_color;
   float r = this->radius;
   vec radius_vec = vec(r,r,r);
-  this->bounding_box = aabb(this->center-radius_vec,this->center+radius_vec);
+  this->bb = aabb(this->center-radius_vec,this->center+radius_vec);
 }
 
 /*
@@ -53,6 +53,6 @@ color sphere::get_base_color() const {
   return this->base_color;
 }
 
-aabb sphere:bounding_box() const {
-  return this->bounding_box;
+aabb sphere::bounding_box() const {
+  return this->bb;
 }
