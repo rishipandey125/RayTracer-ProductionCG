@@ -73,11 +73,17 @@ void render_frame() {
   int image_width = 1000;
   int image_height = (int)(image_width/cam.aspect_ratio);
   //Creating Scene Geometry
-  plane floor(point(-1,-1,-1),point(-1,1,-10),point(1,1,-10),point(1,-1,-1),color(1,0,0));
-  sphere ball(point(0,0,-3),.5,color(0,0,1));
-  sphere ball2(point(-1,0,-3),.5,color(0,1,1));
-  triangle tri(point(.1,-1,-2),point(0.4,-1,-2),point(0.25,.6,-2),color(0,1,0));
-  std::vector<geometry*> scene_geometry = {&floor,&ball,&ball2,&tri};
+  int num_spheres = 7;
+  // sphere ball(point(0,0,-3),.5,color(0,0,1));
+  // sphere ball2(point(-1,0,-3),.5,color(0,1,1));
+  std::vector<geometry*> scene_geometry;
+  for (int i = 0; i < num_spheres; i++) {
+    sphere ball = sphere(point(random_float(-2,2),random_float(-2,2),-15), 0.5, color(1,0,0));
+    scene_geometry.push_back(&ball);
+  }
+  bvh bvh_tree = bvh();
+  bvh_tree.build_tree(scene_geometry,8);
+
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel

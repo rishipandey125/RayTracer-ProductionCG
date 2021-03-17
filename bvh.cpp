@@ -23,9 +23,8 @@ aabb geometry_box(std::vector<geometry*> &scene_geometry) {
 bvh::bvh() {}
 
 //This is where we create the tree
-bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
-  //if the data is less than num_geo then make a leaf
-  aabb output_box = geometry_box(scene_geometry);
+bvh* bvh::build_tree(std::vector<geometry*> scene_geometry, int num_geo) {
+  // aabb output_box = geometry_box(scene_geometry);
    if (scene_geometry.size() <= num_geo) {
     this->leaf_geometry = &scene_geometry;
     this->left = NULL;
@@ -36,7 +35,7 @@ bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
   } else {
     this->leaf_geometry = NULL;
     //get the bounding box of the scene geometry
-    this->box = output_box;
+    // this->box = output_box;
     //partition the data and make a left and right node    this->left = bvh(left_scene_geometry, num_geo);
     std::vector<geometry*> left_scene_geometry;
     std::vector<geometry*> right_scene_geometry;
@@ -50,13 +49,17 @@ bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
         right_scene_geometry.push_back(scene_geometry[i]);
       }
     }
-    bvh left_node = bvh(left_scene_geometry,num_geo);
-    bvh right_node = bvh(right_scene_geometry,num_geo);
-    this->left = &left_node;
-    this->right = &right_node;
+    // bvh left_node = bvh(left_scene_geometry,num_geo);
+    // bvh right_node = bvh(right_scene_geometry,num_geo);
+    bvh left_node;
+    bvh right_node;
+    this->left = (left_node.build_tree(left_scene_geometry,num_geo));
+    // std::cout << "check" << std::endl;
+    this->right = (right_node.build_tree(right_scene_geometry,num_geo));
     this->box = this->left->box.surrounding_box(this->right->box);
     this->leaf = false;
   }
+  return this;
 }
 
 float bvh::hit(ray &casted_ray) const {
