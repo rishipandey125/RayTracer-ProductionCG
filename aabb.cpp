@@ -32,23 +32,19 @@ Hit Function for AABB:
 @param casted_ray: ray casted at geometry
 @return: -1 for no hit, and 1 for hit
 */
-float aabb::check_hit(ray &casted_ray) {
-  float t1 = 0.0;
+bool aabb::check_hit(ray &casted_ray, float t_min, float t_max) {
   for (int i = 0; i < 3; i++) {
     float min_val = (this->minimum[i]-casted_ray.origin[i]) / casted_ray.direction[i];
     float max_val = (this->maximum[i]-casted_ray.origin[i]) / casted_ray.direction[i];
     float t0 = fmin(min_val,max_val);
-    t1 = fmax(min_val,max_val);
-    float tmin = fmax(t0,0.0);
-    // float tmin = fmax(t0,t_min);
-    // float tmax = fmin(t1,t_max);
-    // std::cout << t0 << std::endl;
-    if (t1 <= tmin) {
-      return -1.0;
+    float t1 = fmax(min_val,max_val);
+    t_min = fmax(t0,t_min)
+    t_max = fmin(t1,t_max);
+    if (t_max <= t_min) {
+      return false;
     }
   }
-  std::cout << t1 << std::endl;
-  return t1;
+  return true;
 }
 
 aabb aabb::surrounding_box(aabb &box) {

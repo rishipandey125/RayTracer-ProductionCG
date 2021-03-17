@@ -10,7 +10,7 @@ class aabb {
     aabb(point a, point b);
     //Member Functions
     void operator=(const aabb &box);
-    float check_hit(ray &casted_ray);
+    bool check_hit(ray &casted_ray, float t_min, float t_max);
     aabb surrounding_box(aabb &box);
     //Member Variables
     point minimum;

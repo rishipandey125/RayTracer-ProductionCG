@@ -2,13 +2,12 @@
 
 bvh::bvh() {}
 
-bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
+bvh::bvh(hittables  &hittable_list, int num_geo) {
   if (scene_geometry.size() <= num_geo) {
-   this->leaf_geometry = scene_geometry;
+   this = hittable_list;
    this->left = NULL;
    this->right = NULL;
    this->box = geometry_box(scene_geometry);
-   this->leaf = true;
    //create a leaf
  } else {
    // this->leaf_geometry = NULL;
