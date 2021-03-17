@@ -28,13 +28,15 @@ Hit Function for Plane
 @param casted_ray: ray casted from the camera (could be perspective or orthographic)
 @return float: -1 if there is no hit, and t (parametric value on the ray) if there is a hit
 */
-float plane::hit(ray &casted_ray) const {
+bool plane::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const {
   vec n = this->normal_vector;
   point ao = this->vertex1-casted_ray.origin;
   float denom = casted_ray.direction.dot(n);
   float t = (ao.dot(n))/denom;
   if (t > 0.0) {
-    return t;
+    rec.t = t;
+    rec.object = this;
+    return true;
   }
   return -1.0;
 }

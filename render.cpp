@@ -16,34 +16,6 @@
 //Constant Epsilon
 const float EPSILON = 0.0001;
 
-std::vector<geometry*> * traverse_bvh(bvh *bvh_tree,ray &casted_ray) {
-  //this is printing for each ray there is no hit
-  if (bvh_tree->hit(casted_ray) > 0.0) {
-    // std::cout << "hit" << std::endl;
-    if (bvh_tree->leaf) {
-      // bvh_tree.box.centroid.print();
-      return &(bvh_tree->leaf_geometry);
-    } else {
-      // std::cout << "traversing" << std::endl;
-      float t_left = bvh_tree->left->hit(casted_ray);
-      float t_right = bvh_tree->right->hit(casted_ray);
-      if (t_left > 0.0 && t_right > 0.0) {
-        if (t_left < t_right) {
-          return traverse_bvh(bvh_tree->right,casted_ray);
-        } else {
-          return traverse_bvh(bvh_tree->right,casted_ray);
-        }
-      } else if (t_left > 0.0) {
-        return traverse_bvh(bvh_tree->left,casted_ray);
-      } else if (t_right > 0.0) {
-        return traverse_bvh(bvh_tree->right,casted_ray);
-      }
-    }
-  }
-  return NULL;
-}
-
-
 /*
 Shading Function - Blinn-Phong Lambertian Shading and Shadows:
 @param hit_point: the point to shade
@@ -60,20 +32,6 @@ color shading(point &hit_point, vec &normal_vector,point &point_light, color &ba
   ray shadow_ray(hit_point+epsilon,light_vector);
   //shadow shading constant
   float shadow = 0.15;
-  //include bvh here
-  // std::vector<geometry*> * leaf_geometry;
-  // leaf_geometry = traverse_bvh(&bvh_t,shadow_ray);
-  // if (leaf_geometry != NULL) {
-  //   std::vector<geometry*> geo = *leaf_geometry;
-  //   for (geometry *object : geo) {
-  //     float t = object->hit(shadow_ray);
-  //     if (t > 0.0) {
-  //       //an object is casting a shadow
-  //       shadow = 0.0;
-  //       break;
-  //     }
-  //   }
-  // }
   float diffuse = normal_vector.dot(light_vector);
   diffuse += shadow;
   //add specular component here

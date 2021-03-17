@@ -24,29 +24,31 @@ Hit Function for Triangle:
 @param casted_ray: ray casted at geometry
 @return: -1 for no hit, and t (parametric value on ray) for a hit
 */
-float triangle::hit(ray &casted_ray) const {
+bool triangle::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const {
   float epsilon = 0.0000001;
   vec h = (casted_ray.direction).cross(this->edge2);
   float a = (this->edge1).dot(h);
   if (a > (-1*epsilon) && a < epsilon) {
-    return -1;
+    return false;
   }
   float f = 1.0/a;
   vec s = casted_ray.origin-this->vertex1;
   float u = f * s.dot(h);
   if (u < 0 || u > 1) {
-    return -1.0;
+    return false;
   }
   vec q = s.cross(this->edge1);
   float v = f * (casted_ray.direction).dot(q);
   if (v < 0 || (u+v) > 1) {
-    return -1.0;
+    return false;
   }
   float t = f * this->edge2.dot(q);
   if (t > epsilon) {
-    return t;
+    rec.t = t;
+    rec.object = this;
+    return true;
   }
-  return -1.0;
+  return false;
 }
 
 /*

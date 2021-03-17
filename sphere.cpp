@@ -25,16 +25,19 @@ Hit Function for Sphere:
 @param casted_ray: ray casted at geometry
 @return: -1 for no hit, and t (parametric value on ray) for a hit
 */
-float sphere::hit(ray &casted_ray) const {
+bool sphere::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const {
   vec ac = casted_ray.origin-this->center;
   float a = casted_ray.direction.dot(casted_ray.direction);
   float b = 2*casted_ray.direction.dot(ac);
   float c = ac.dot(ac) - (this->radius*this->radius);
   float discriminant = (b*b)-(4*a*c);
+  float t = 0.0;
   if (discriminant > 0.0)  {
-    return ((-b-sqrt(discriminant))/(2*a));
+    rec.t = ((-b-sqrt(discriminant))/(2*a));
+    rec.object = this;
+    return true;
   }
-  return -1.0;
+  return false;
 }
 
 /*

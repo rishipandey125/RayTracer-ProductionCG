@@ -9,8 +9,25 @@ void hittables::add(geometry * object) {
   this->geo.push_back(object);
 }
 
-float hittables::hit(ray &casted_ray) const {
-  return 1.0;
+bool hittables::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const {
+  geometry * closest_geo;
+  float closest_t = RAND_MAX;
+  bool hit = false;
+  for (int i = 0; i < this->geo.size(); i++) {
+    if (this->geo[i].hit(casted_ray,t_min,t_max,hit_record)) {
+      hit = true;
+      if (rec.t < closest_t) {
+        closest_t = rec.t;
+        closest_geo = rec.object;
+      }
+    }
+  }
+  if (hit) {
+    rec.t = closest_t;
+    rec.object = closest_geo;
+    return true;
+  }
+    return false;
 }
 
 
