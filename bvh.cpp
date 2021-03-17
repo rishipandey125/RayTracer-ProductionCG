@@ -22,44 +22,35 @@ aabb geometry_box(std::vector<geometry*> &scene_geometry) {
 
 bvh::bvh() {}
 
-//This is where we create the tree
-bvh* bvh::build_tree(std::vector<geometry*> scene_geometry, int num_geo) {
-  // aabb output_box = geometry_box(scene_geometry);
-   if (scene_geometry.size() <= num_geo) {
-    this->leaf_geometry = &scene_geometry;
-    this->left = NULL;
-    this->right = NULL;
-    this->box = geometry_box(scene_geometry);
-    this->leaf = true;
-    //create a leaf
-  } else {
-    this->leaf_geometry = NULL;
-    //get the bounding box of the scene geometry
-    // this->box = output_box;
-    //partition the data and make a left and right node    this->left = bvh(left_scene_geometry, num_geo);
-    std::vector<geometry*> left_scene_geometry;
-    std::vector<geometry*> right_scene_geometry;
-    point midpoint = get_midpoint(scene_geometry);
-    // int index = random_int(0,2);
-    int index = 1;
-    for (int i = 0; i < scene_geometry.size(); i++) {
-      if (scene_geometry[i]->bounding_box().centroid[index] < midpoint[index]) {
-        left_scene_geometry.push_back(scene_geometry[i]);
-      } else {
-        right_scene_geometry.push_back(scene_geometry[i]);
-      }
-    }
-    // bvh left_node = bvh(left_scene_geometry,num_geo);
-    // bvh right_node = bvh(right_scene_geometry,num_geo);
-    bvh left_node;
-    bvh right_node;
-    this->left = (left_node.build_tree(left_scene_geometry,num_geo));
-    // std::cout << "check" << std::endl;
-    this->right = (right_node.build_tree(right_scene_geometry,num_geo));
-    this->box = this->left->box.surrounding_box(this->right->box);
-    this->leaf = false;
-  }
-  return this;
+bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
+  if (scene_geometry.size() <= num_geo) {
+   this->leaf_geometry = &scene_geometry;
+   this->left = NULL;
+   this->right = NULL;
+   this->box = geometry_box(scene_geometry);
+   this->leaf = true;
+   //create a leaf
+ } else {
+   this->leaf_geometry = NULL;
+   //get the bounding box of the scene geometry
+   //partition the data and make a left and right node    this->left = bvh(left_scene_geometry, num_geo);
+   std::vector<geometry*> left_scene_geometry;
+   std::vector<geometry*> right_scene_geometry;
+   point midpoint = get_midpoint(scene_geometry);
+   int index = random_float(0,2);
+   // std::cerr << index << std::endl;
+   for (int i = 0; i < scene_geometry.size(); i++) {
+     if (scene_geometry[i]->bounding_box().centroid[index] < midpoint[index]) {
+       left_scene_geometry.push_back(scene_geometry[i]);
+     } else {
+       right_scene_geometry.push_back(scene_geometry[i]);
+     }
+   }
+   this->left = new bvh(left_scene_geometry,num_geo);
+   this->right = new bvh(right_scene_geometry,num_geo);
+   this->box = this->left->box.surrounding_box(this->right->box);
+   this->leaf = false;
+ }
 }
 
 float bvh::hit(ray &casted_ray) const {

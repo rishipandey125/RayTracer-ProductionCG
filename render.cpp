@@ -63,6 +63,30 @@ color output_color(color &pixel, int samples) {
   return output_pixel;
 }
 
+std::vector<geometry*> traverse_bvh(bvh &bvh_tree,ray &casted_ray) {
+  if (bvh_tree.hit(casted_ray) > 0.0) {
+    if (bvh_tree.leaf) {
+      return *(bvh_tree.leaf_geometry);
+    } else {
+      float t_left = bvh_tree.left->hit(casted_ray);
+      float t_right = bvh_tree.right->hit(casted_ray);
+      if (t_left > 0.0 && t_right > 0.0) {
+        if (t_left <= t_right) {
+          traverse_bvh(*bvh_tree.left,casted_ray);
+        } else {
+          traverse_bvh(*bvh_tree.right,casted_ray);
+        }
+      } else if (t_left > 0.0) {
+        traverse_bvh(*bvh_tree.left,casted_ray);
+      } else if (t_right > 0.0) {
+        traverse_bvh(*bvh_tree.right,casted_ray);
+      }
+    }
+  }
+  std::vector<geometry*> empty_geometry;
+  return empty_geometry;
+}
+
 //Function to Render Image
 void render_frame() {
   //Creating a Camera
@@ -73,16 +97,16 @@ void render_frame() {
   int image_width = 1000;
   int image_height = (int)(image_width/cam.aspect_ratio);
   //Creating Scene Geometry
-  int num_spheres = 7;
+  int num_spheres = 20;
   // sphere ball(point(0,0,-3),.5,color(0,0,1));
   // sphere ball2(point(-1,0,-3),.5,color(0,1,1));
   std::vector<geometry*> scene_geometry;
   for (int i = 0; i < num_spheres; i++) {
-    sphere ball = sphere(point(random_float(-2,2),random_float(-2,2),-15), 0.5, color(1,0,0));
-    scene_geometry.push_back(&ball);
+    sphere * ball = new sphere(point(random_float(-2,2),random_float(-2,2),-15), 0.5, color(1,0,0));
+    ball->bounding_box().centroid.print();
+    scene_geometry.push_back(ball);
   }
-  bvh bvh_tree = bvh();
-  bvh_tree.build_tree(scene_geometry,8);
+  bvh bvh_tree = bvh(scene_geometry,4);
 
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -128,17 +152,29 @@ void render_frame() {
           float closest_t = float(RAND_MAX);
           geometry * closest_geometry;
           bool hit = false;
-          //checking for a hit in the scene geometry
+
+
+          //checking for a hit in the leaf geometry
           //go through the entire tree if you get to the bottom
           // save the geometry at the bottom into a vector and pass that next
           //otherwise skip that ray
-          for (int i = 0; i < scene_geometry.size(); i++) {
-            float t = (scene_geometry[i])->hit(casted_ray);
-            //if there is a hit and it is closer than the one before it
-            if (t > 0.0 && t < closest_t) {
-              closest_geometry = scene_geometry[i];
-              closest_t = t;
-              hit = true;
+          //fire at bvh node
+          //if you hit, hit hte left and right
+          //if you hit those keep going until you dont hit or you are at a leaf
+          //if you are at a leaf
+          //fire a ray at every piece of geometry in that vector
+          //store hit information
+          std::vector<geometry*> leaf_geometry;
+          leaf_geometry = traverse_bvh(bvh_tree,casted_ray);
+          if (leaf_geometry.size() > 0) {
+            for (int i = 0; i < leaf_geometry.size(); i++) {
+              float t = (leaf_geometry[i])->hit(casted_ray);
+              //if there is a hit and it is closer than the one before it
+              if (t > 0.0 && t < closest_t) {
+                closest_geometry = leaf_geometry[i];
+                closest_t = t;
+                hit = true;
+              }
             }
           }
           //if a hit was found shade!
@@ -162,7 +198,7 @@ void render_frame() {
       int r = static_cast<int>(255*output.x);
       int g = static_cast<int>(255*output.y);
       int b = static_cast<int>(255*output.z);
-      std::cout << r << ' ' << g << ' ' << b << '\n';
+      // std::cout << r << ' ' << g << ' ' << b << '\n';
     }
   }
 }
