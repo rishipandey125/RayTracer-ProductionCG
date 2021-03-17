@@ -21,7 +21,7 @@ class bvh : public geometry {
     //Member Variables
     bvh *left;
     bvh *right;
-    std::vector<geometry*> *leaf_geometry;
+    std::vector<geometry*> leaf_geometry;
     aabb box;
     bool leaf;
 

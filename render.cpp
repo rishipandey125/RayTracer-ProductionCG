@@ -8,12 +8,41 @@
 #include "sphere.cpp"
 #include "triangle.cpp"
 #include "plane.cpp"
+#include "hittables.cpp"
 #include "random.cpp"
 #include <vector>
 
 //Render File
 //Constant Epsilon
 const float EPSILON = 0.0001;
+
+std::vector<geometry*> * traverse_bvh(bvh *bvh_tree,ray &casted_ray) {
+  //this is printing for each ray there is no hit
+  if (bvh_tree->hit(casted_ray) > 0.0) {
+    // std::cout << "hit" << std::endl;
+    if (bvh_tree->leaf) {
+      // bvh_tree.box.centroid.print();
+      return &(bvh_tree->leaf_geometry);
+    } else {
+      // std::cout << "traversing" << std::endl;
+      float t_left = bvh_tree->left->hit(casted_ray);
+      float t_right = bvh_tree->right->hit(casted_ray);
+      if (t_left > 0.0 && t_right > 0.0) {
+        if (t_left < t_right) {
+          return traverse_bvh(bvh_tree->right,casted_ray);
+        } else {
+          return traverse_bvh(bvh_tree->right,casted_ray);
+        }
+      } else if (t_left > 0.0) {
+        return traverse_bvh(bvh_tree->left,casted_ray);
+      } else if (t_right > 0.0) {
+        return traverse_bvh(bvh_tree->right,casted_ray);
+      }
+    }
+  }
+  return NULL;
+}
+
 
 /*
 Shading Function - Blinn-Phong Lambertian Shading and Shadows:
@@ -24,21 +53,27 @@ Shading Function - Blinn-Phong Lambertian Shading and Shadows:
 @param scene_geometry: geometry in the scene to check for shadows
 @return shade: color to shade the pixel
 */
-color shading(point &hit_point, vec &normal_vector,point &point_light, color &base_color, std::vector<geometry*> scene_geometry) {
+color shading(point &hit_point, vec &normal_vector,point &point_light, color &base_color, bvh &bvh_t) {
   vec light_vector = point_light-hit_point;
   light_vector.unit();
   vec epsilon(EPSILON,EPSILON,EPSILON);
   ray shadow_ray(hit_point+epsilon,light_vector);
   //shadow shading constant
   float shadow = 0.15;
-  for (geometry *object : scene_geometry) {
-    float t = object->hit(shadow_ray);
-    if (t > 0.0) {
-      //an object is casting a shadow
-      shadow = 0.0;
-      break;
-    }
-  }
+  //include bvh here
+  // std::vector<geometry*> * leaf_geometry;
+  // leaf_geometry = traverse_bvh(&bvh_t,shadow_ray);
+  // if (leaf_geometry != NULL) {
+  //   std::vector<geometry*> geo = *leaf_geometry;
+  //   for (geometry *object : geo) {
+  //     float t = object->hit(shadow_ray);
+  //     if (t > 0.0) {
+  //       //an object is casting a shadow
+  //       shadow = 0.0;
+  //       break;
+  //     }
+  //   }
+  // }
   float diffuse = normal_vector.dot(light_vector);
   diffuse += shadow;
   //add specular component here
@@ -63,32 +98,6 @@ color output_color(color &pixel, int samples) {
   return output_pixel;
 }
 
-std::vector<geometry*> traverse_bvh(bvh &bvh_tree,ray &casted_ray) {
-  //this is printing for each ray there is no hit
-  // bvh_tree.box.centroid.print();
-  if (bvh_tree.hit(casted_ray) > 0.0) {
-    std::cout << "hit" << std::endl;
-    if (bvh_tree.leaf) {
-      return *(bvh_tree.leaf_geometry);
-    } else {
-      float t_left = bvh_tree.left->hit(casted_ray);
-      float t_right = bvh_tree.right->hit(casted_ray);
-      if (t_left > 0.0 && t_right > 0.0) {
-        if (t_left <= t_right) {
-          traverse_bvh(*bvh_tree.left,casted_ray);
-        } else {
-          traverse_bvh(*bvh_tree.right,casted_ray);
-        }
-      } else if (t_left > 0.0) {
-        traverse_bvh(*bvh_tree.left,casted_ray);
-      } else if (t_right > 0.0) {
-        traverse_bvh(*bvh_tree.right,casted_ray);
-      }
-    }
-  }
-  std::vector<geometry*> empty_geometry;
-  return empty_geometry;
-}
 
 //Function to Render Image
 void render_frame() {
@@ -100,16 +109,15 @@ void render_frame() {
   int image_width = 1000;
   int image_height = (int)(image_width/cam.aspect_ratio);
   //Creating Scene Geometry
-  int num_spheres = 20;
+  int num_spheres = 100;
   // sphere ball(point(0,0,-3),.5,color(0,0,1));
   // sphere ball2(point(-1,0,-3),.5,color(0,1,1));
   std::vector<geometry*> scene_geometry;
   for (int i = 0; i < num_spheres; i++) {
-    sphere * ball = new sphere(point(random_float(-4,4),random_float(-4,4),random_float(-12,-17)), 0.5, color(1,0,0));
+    sphere * ball = new sphere(point(random_float(-1,1),random_float(-1,1),random_float(-20.0,-100.0)), 0.5, color(1,0,0));
     scene_geometry.push_back(ball);
   }
-  bvh bvh_tree = bvh(scene_geometry,4);
-
+  bvh bvh_t = bvh(scene_geometry,5);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
@@ -166,14 +174,19 @@ void render_frame() {
           //if you are at a leaf
           //fire a ray at every piece of geometry in that vector
           //store hit information
-          std::vector<geometry*> leaf_geometry;
-          leaf_geometry = traverse_bvh(bvh_tree,casted_ray);
-          if (leaf_geometry.size() > 0) {
-            for (int i = 0; i < leaf_geometry.size(); i++) {
-              float t = (leaf_geometry[i])->hit(casted_ray);
+          std::vector<geometry*> * leaf_geometry;
+          leaf_geometry = traverse_bvh(&bvh_t,casted_ray); //this is the issue
+          if (leaf_geometry != NULL) {
+            // std::cout << "entered" << std::endl;
+            std::vector<geometry*> geometry = *leaf_geometry;
+            // std::cout << geometry.size() << std::endl;
+            for (int i = 0; i < geometry.size(); i++) {
+              // std::cout << geometry.size() << std::endl;
+              // geometry[i]->get_base_color().print();
+              float t = geometry[i]->hit(casted_ray);
               //if there is a hit and it is closer than the one before it
               if (t > 0.0 && t < closest_t) {
-                closest_geometry = leaf_geometry[i];
+                closest_geometry = geometry[i];
                 closest_t = t;
                 hit = true;
               }
@@ -190,7 +203,7 @@ void render_frame() {
             normal.unit();
             color base_color = (closest_geometry)->get_base_color();
             //shade the pixel
-            shade = shade + shading(hit_point,normal,point_light,base_color,scene_geometry);
+            shade = shade + shading(hit_point,normal,point_light,base_color,bvh_t);
           }
         }
       }

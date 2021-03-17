@@ -12,12 +12,10 @@ point get_midpoint(std::vector<geometry*> &scene_geometry) {
 
 aabb geometry_box(std::vector<geometry*> &scene_geometry) {
   aabb first_box = aabb();
-  aabb second_box = aabb();
   aabb output_box = aabb();
   for (int i = 0; i < scene_geometry.size(); i++) {
-    second_box = scene_geometry[i]->bounding_box();
-    output_box = first_box.surrounding_box(second_box);
-    first_box = output_box;
+    first_box = scene_geometry[i]->bounding_box();
+    output_box = output_box.surrounding_box(first_box);
   }
   return output_box;
 }
@@ -26,22 +24,21 @@ bvh::bvh() {}
 
 bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
   if (scene_geometry.size() <= num_geo) {
-   this->leaf_geometry = &scene_geometry;
+   this->leaf_geometry = scene_geometry;
    this->left = NULL;
    this->right = NULL;
    this->box = geometry_box(scene_geometry);
-   std::cout << scene_geometry.size() << std::endl;
    this->leaf = true;
    //create a leaf
  } else {
-   this->leaf_geometry = NULL;
+   // this->leaf_geometry = NULL;
+   this->leaf = false;
    //get the bounding box of the scene geometry
    //partition the data and make a left and right node    this->left = bvh(left_scene_geometry, num_geo);
    std::vector<geometry*> left_scene_geometry;
    std::vector<geometry*> right_scene_geometry;
    point midpoint = get_midpoint(scene_geometry);
-   int index = random_float(0,2);
-   // std::cerr << index << std::endl;
+   int index = random_float(0,3);
    for (int i = 0; i < scene_geometry.size(); i++) {
      if (scene_geometry[i]->bounding_box().centroid[index] < midpoint[index]) {
        left_scene_geometry.push_back(scene_geometry[i]);
@@ -53,7 +50,6 @@ bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
    this->right = new bvh(right_scene_geometry,num_geo);
    // this->box = geometry_box(scene_geometry);
    this->box = this->left->box.surrounding_box(this->right->box);
-   this->leaf = false;
  }
 }
 
