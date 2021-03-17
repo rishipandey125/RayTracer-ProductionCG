@@ -12,7 +12,7 @@ class bvh : public geometry {
     //Constructors
     bvh();
     //This Builds the Tree
-    bvh(std::vector<geometry*> scene_geometry, int num_geo);
+    bvh(hittables , int num_geo);
     //Geometry Functions
     float hit(ray &casted_ray) const override;
     vec get_normal_vector(point &point_on_sphere) const override;

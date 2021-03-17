@@ -10,8 +10,6 @@ void hittables::add(geometry * object) {
 }
 
 bool hittables::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const {
-  geometry * closest_geo;
-  float closest_t = RAND_MAX;
   bool hit = false;
   for (int i = 0; i < this->geo.size(); i++) {
     if (this->geo[i]->hit(casted_ray,t_min,t_max,rec)) {
@@ -20,6 +18,15 @@ bool hittables::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec
     }
   }
   return hit;
+}
+
+point hittables::get_midpoint() {
+  point midpoint = point();
+  for (int i = 0; i < this->geo.size(); i++) {
+    midpoint = midpoint + this->geo[i]->bounding_box().centroid;
+  }
+  midpoint = midpoint/this->geo.size();
+  return midpoint;
 }
 
 

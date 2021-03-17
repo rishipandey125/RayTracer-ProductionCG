@@ -1,25 +1,5 @@
 #include "bvh.h"
 
-
-point get_midpoint(std::vector<geometry*> &scene_geometry) {
-  point midpoint = point();
-  for (int i = 0; i < scene_geometry.size(); i++) {
-    midpoint = midpoint + scene_geometry[i]->bounding_box().centroid;
-  }
-  midpoint = midpoint/scene_geometry.size();
-  return midpoint;
-}
-
-aabb geometry_box(std::vector<geometry*> &scene_geometry) {
-  aabb first_box = aabb();
-  aabb output_box = aabb();
-  for (int i = 0; i < scene_geometry.size(); i++) {
-    first_box = scene_geometry[i]->bounding_box();
-    output_box = output_box.surrounding_box(first_box);
-  }
-  return output_box;
-}
-
 bvh::bvh() {}
 
 bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
