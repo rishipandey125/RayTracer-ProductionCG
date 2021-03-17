@@ -14,20 +14,12 @@ bool hittables::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec
   float closest_t = RAND_MAX;
   bool hit = false;
   for (int i = 0; i < this->geo.size(); i++) {
-    if (this->geo[i].hit(casted_ray,t_min,t_max,hit_record)) {
+    if (this->geo[i]->hit(casted_ray,t_min,t_max,rec)) {
       hit = true;
-      if (rec.t < closest_t) {
-        closest_t = rec.t;
-        closest_geo = rec.object;
-      }
+      t_max = rec.t;
     }
   }
-  if (hit) {
-    rec.t = closest_t;
-    rec.object = closest_geo;
-    return true;
-  }
-    return false;
+  return hit;
 }
 
 

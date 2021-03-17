@@ -44,8 +44,13 @@ bool triangle::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec)
   }
   float t = f * this->edge2.dot(q);
   if (t > epsilon) {
+    if (t < t_min || t > t_max) {
+      return false;
+    }
     rec.t = t;
-    rec.object = this;
+    rec.hit_point = casted_ray.get_point_at(t);
+    rec.normal = this->get_normal_vector(rec.hit_point);
+    rec.base_color = this->get_base_color();
     return true;
   }
   return false;

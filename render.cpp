@@ -2,7 +2,7 @@
 #include "vec.cpp"
 #include "ray.cpp"
 #include "aabb.cpp"
-#include "bvh.cpp"
+// #include "bvh.cpp"
 #include "camera.cpp"
 #include "geometry.h"
 #include "sphere.cpp"
@@ -10,7 +10,7 @@
 #include "plane.cpp"
 #include "hittables.cpp"
 #include "random.cpp"
-#include <vector>
+// #include <vector>
 
 //Render File
 //Constant Epsilon
@@ -25,11 +25,11 @@ Shading Function - Blinn-Phong Lambertian Shading and Shadows:
 @param scene_geometry: geometry in the scene to check for shadows
 @return shade: color to shade the pixel
 */
-color shading(point &hit_point, vec &normal_vector,point &point_light, color &base_color, bvh &bvh_t) {
+color shading(point &hit_point, vec &normal_vector,point &point_light, color &base_color) {
   vec light_vector = point_light-hit_point;
   light_vector.unit();
   vec epsilon(EPSILON,EPSILON,EPSILON);
-  ray shadow_ray(hit_point+epsilon,light_vector);
+  // ray shadow_ray(hit_point+epsilon,light_vector);
   //shadow shading constant
   float shadow = 0.15;
   float diffuse = normal_vector.dot(light_vector);
@@ -67,15 +67,14 @@ void render_frame() {
   int image_width = 1000;
   int image_height = (int)(image_width/cam.aspect_ratio);
   //Creating Scene Geometry
-  int num_spheres = 100;
-  // sphere ball(point(0,0,-3),.5,color(0,0,1));
-  // sphere ball2(point(-1,0,-3),.5,color(0,1,1));
-  std::vector<geometry*> scene_geometry;
+  int num_spheres = 50;
+
+  hittables scene_geometry;
   for (int i = 0; i < num_spheres; i++) {
-    sphere * ball = new sphere(point(random_float(-1,1),random_float(-1,1),random_float(-20.0,-100.0)), 0.5, color(1,0,0));
-    scene_geometry.push_back(ball);
+    color col_rand = color(random_float(),random_float(),random_float());
+    scene_geometry.add(new sphere(point(random_float(-1,1),random_float(-1,1),random_float(-2.0,-10.0)), 0.5, col_rand));
   }
-  bvh bvh_t = bvh(scene_geometry,5);
+  // bvh bvh_t = bvh(scene_geometry,5);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
@@ -117,51 +116,19 @@ void render_frame() {
           float v = (float(j)+canonical[ys][xs][0])/image_width;
           //cast ray into the scene
           ray casted_ray = cam.cast_perspective_ray(u,v);
-          float closest_t = float(RAND_MAX);
-          geometry * closest_geometry;
-          bool hit = false;
-
-
-          //checking for a hit in the leaf geometry
-          //go through the entire tree if you get to the bottom
-          // save the geometry at the bottom into a vector and pass that next
-          //otherwise skip that ray
-          //fire at bvh node
-          //if you hit, hit hte left and right
-          //if you hit those keep going until you dont hit or you are at a leaf
-          //if you are at a leaf
-          //fire a ray at every piece of geometry in that vector
-          //store hit information
-          std::vector<geometry*> * leaf_geometry;
-          leaf_geometry = traverse_bvh(&bvh_t,casted_ray); //this is the issue
-          if (leaf_geometry != NULL) {
-            // std::cout << "entered" << std::endl;
-            std::vector<geometry*> geometry = *leaf_geometry;
-            // std::cout << geometry.size() << std::endl;
-            for (int i = 0; i < geometry.size(); i++) {
-              // std::cout << geometry.size() << std::endl;
-              // geometry[i]->get_base_color().print();
-              float t = geometry[i]->hit(casted_ray);
-              //if there is a hit and it is closer than the one before it
-              if (t > 0.0 && t < closest_t) {
-                closest_geometry = geometry[i];
-                closest_t = t;
-                hit = true;
-              }
-            }
-          }
+          hit_record rec;
           //if a hit was found shade!
-          if (hit) {
-            point hit_point = casted_ray.get_point_at(closest_t);
-            vec normal = (closest_geometry)->get_normal_vector(hit_point);
+          if (scene_geometry.hit(casted_ray,0.0,RAND_MAX,rec)) {
+            point hit_point = rec.hit_point;
+            vec normal = rec.normal;
             //check to make sure the normal vector is facing the correct way
             if (normal.dot(casted_ray.direction) > 0.0) {
               normal = normal * -1.0;
             }
             normal.unit();
-            color base_color = (closest_geometry)->get_base_color();
+            color base_color = rec.base_color;
             //shade the pixel
-            shade = shade + shading(hit_point,normal,point_light,base_color,bvh_t);
+            shade = shade + shading(hit_point,normal,point_light,base_color);
           }
         }
       }
@@ -171,7 +138,7 @@ void render_frame() {
       int r = static_cast<int>(255*output.x);
       int g = static_cast<int>(255*output.y);
       int b = static_cast<int>(255*output.z);
-      // std::cout << r << ' ' << g << ' ' << b << '\n';
+      std::cout << r << ' ' << g << ' ' << b << '\n';
     }
   }
 }

@@ -5,9 +5,11 @@
 #include "aabb.h"
 
 struct hit_record {
+  point hit_point;
+  vec normal;
   float t;
-  geometry *object;
-}
+  color base_color;
+};
 //Geometry Parent Class: Virtual Functions Overriden by Geometry Children (Sphere,Plane,Triangle)
 class geometry {
   public:
