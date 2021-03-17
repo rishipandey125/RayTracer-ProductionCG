@@ -9,6 +9,7 @@ class aabb {
     aabb();
     aabb(point a, point b);
     //Member Functions
+    void operator=(const aabb &box);
     float check_hit(ray &casted_ray);
     aabb surrounding_box(aabb &box);
     //Member Variables

@@ -64,7 +64,10 @@ color output_color(color &pixel, int samples) {
 }
 
 std::vector<geometry*> traverse_bvh(bvh &bvh_tree,ray &casted_ray) {
+  //this is printing for each ray there is no hit
+  // bvh_tree.box.centroid.print();
   if (bvh_tree.hit(casted_ray) > 0.0) {
+    std::cout << "hit" << std::endl;
     if (bvh_tree.leaf) {
       return *(bvh_tree.leaf_geometry);
     } else {
@@ -102,8 +105,7 @@ void render_frame() {
   // sphere ball2(point(-1,0,-3),.5,color(0,1,1));
   std::vector<geometry*> scene_geometry;
   for (int i = 0; i < num_spheres; i++) {
-    sphere * ball = new sphere(point(random_float(-2,2),random_float(-2,2),-15), 0.5, color(1,0,0));
-    ball->bounding_box().centroid.print();
+    sphere * ball = new sphere(point(random_float(-4,4),random_float(-4,4),random_float(-12,-17)), 0.5, color(1,0,0));
     scene_geometry.push_back(ball);
   }
   bvh bvh_tree = bvh(scene_geometry,4);

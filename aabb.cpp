@@ -20,6 +20,12 @@ aabb::aabb(point a, point b) {
   this->centroid = (a+b)*0.5;
 }
 
+void aabb::operator=(const aabb &box) {
+  this->minimum = box.minimum;
+  this->maximum = box.maximum;
+  this->centroid = box.centroid;
+}
+
 /*
 Hit Function for AABB:
 @param casted_ray: ray casted at geometry
@@ -48,6 +54,5 @@ aabb aabb::surrounding_box(aabb &box) {
   point max = point(fmin(this->maximum.x,box.maximum.x),
   fmin(this->maximum.y,box.maximum.y),
   fmin(this->maximum.z,box.maximum.z));
-
   return aabb(min,max);
 }

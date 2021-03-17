@@ -11,11 +11,13 @@ point get_midpoint(std::vector<geometry*> &scene_geometry) {
 }
 
 aabb geometry_box(std::vector<geometry*> &scene_geometry) {
-  aabb output_box = scene_geometry[0]->bounding_box();
+  aabb first_box = aabb();
   aabb second_box = aabb();
-  for (int i = 1; i < scene_geometry.size(); i++) {
+  aabb output_box = aabb();
+  for (int i = 0; i < scene_geometry.size(); i++) {
     second_box = scene_geometry[i]->bounding_box();
-    output_box = output_box.surrounding_box(second_box);
+    output_box = first_box.surrounding_box(second_box);
+    first_box = output_box;
   }
   return output_box;
 }
@@ -28,6 +30,7 @@ bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
    this->left = NULL;
    this->right = NULL;
    this->box = geometry_box(scene_geometry);
+   std::cout << scene_geometry.size() << std::endl;
    this->leaf = true;
    //create a leaf
  } else {
@@ -48,6 +51,7 @@ bvh::bvh(std::vector<geometry*> scene_geometry, int num_geo) {
    }
    this->left = new bvh(left_scene_geometry,num_geo);
    this->right = new bvh(right_scene_geometry,num_geo);
+   // this->box = geometry_box(scene_geometry);
    this->box = this->left->box.surrounding_box(this->right->box);
    this->leaf = false;
  }
