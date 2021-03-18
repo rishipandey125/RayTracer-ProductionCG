@@ -9,7 +9,8 @@ class triangle : public geometry {
   public:
     //Constructors
     triangle();
-    triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, color geo_base_color);
+    triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3,
+      vec tri_vert_n1, vec tri_vert_n2, vec tri_vert_n3, color geo_base_color);
     //Geometry Functions
     bool hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const override;
     vec get_normal_vector(point &point_on_triangle) const override;
@@ -19,6 +20,9 @@ class triangle : public geometry {
     point vertex1;
     point vertex2;
     point vertex3;
+    vec vertex1_norm;
+    vec vertex2_norm;
+    vec vertex3_norm;
     //Computed Vectors
     vec edge1;
     vec edge2;

@@ -38,12 +38,12 @@ hittables load_obj_file(std::string inputfile) {
   auto& shapes = reader.GetShapes();
   // auto& materials = reader.GetMaterials();
   hittables mesh;
-
+  std::vector <vec> vertices = {};
+  std::vector <vec> vertex_normals = {};
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {
     // Loop over faces(polygon)
     size_t index_offset = 0;
-    std::vector <vec> vertex_normals = {}
     //Loop Over Each Triangle
     for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
       int fv = shapes[s].mesh.num_face_vertices[f];
@@ -57,22 +57,38 @@ hittables load_obj_file(std::string inputfile) {
         tinyobj::real_t vx = attrib.vertices[3*idx.vertex_index+0];
         tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
         tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
-        point vertex(vx,vy,vz);
-        if (v == 0) {
-          vertex1 = vertex;
-        } else if (v == 1) {
-          vertex2 = vertex;
-        } else if (v == 2) {
-          vertex3 = vertex;
-        };
+        vertices.push_back(vec(vx,vy,vz));
+        vertex_normals.push_back(vec());
       }
       index_offset += fv;
       // per-face material
       shapes[s].mesh.material_ids[f];
     }
   }
+  int num_triangles = vertices.size()/3;
+  for (int i = 0; i < num_triangles; i++) {
+    vec vertex1 = vertices[i*3];
+    vec vertex2 = vertices[(i*3)+1];
+    vec vertex3 = vertices[(i*3)+2];
+    vec edge1 = vertex2 - vertex1;
+    vec edge2 = vertex3 - vertex1;
+    vec face_normal = edge1.cross(edge2);
+    for (int x = 0; x < 3; x++) {
+      vertex_normals[(i*3)+x] = vertex_normals[(i*3)+x] + face_normal;
+    }
+  }
+
+  for (int i = 0; i < num_triangles; i++) {
+    vec vertex1 = vertices[i*3];
+    vec vertex2 = vertices[(i*3)+1];
+    vec vertex3 = vertices[(i*3)+2];
+    vec v_n1 = vertex_normals[i*3];
+    vec v_n2 = vertex_normals[(i*3)+1];
+    vec v_n3 = vertex_normals[(i*3)+2];
+    v_n1.unit(); v_n2.unit(); v_n3.unit();
+    mesh.add(new triangle(vertex1,vertex2,vertex3,v_n1,v_n2,v_n3,color(1,0,0)));
+  }
   //parse the information and then create a new traingle
-  mesh.add(new triangle(vertex1,vertex2,vertex3,color(1,0,0)));
   //also add the new normal vector to the triangle class
   return mesh;
 }
