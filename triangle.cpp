@@ -4,6 +4,24 @@
 //Default Constructor
 triangle::triangle() {}
 
+
+float compute_smallest(float x, float y, float z) {
+  float smallest = x;
+  if (y < smallest)
+    smallest = y;
+  if (z < smallest)
+    smallest = z;
+  return smallest;
+}
+
+float compute_largest(float x, float y, float z) {
+  float largest = x;
+  if (y > largest)
+    largest = y;
+  if (z > largest)
+    largest = z;
+  return largest;
+}
 /*
 Specific Constructor:
 @param tri_vertex1, tri_vertex2, tri_vertex3: vertices of triangle
@@ -17,11 +35,14 @@ triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, colo
   this->edge2 = this->vertex3-this->vertex1;
   this->normal_vector = ((this->edge1).cross(this->edge2));
   this->base_color = geo_base_color;
-  // vec minimum = vec();
-  // vec maximum = vec();
-  // for (int x = 0; x < 3; x++) {
-  //
-  // }
+  vec minimum = vec(compute_smallest(tri_vertex1.x,tri_vertex2.x,tri_vertex3.x),
+                    compute_smallest(tri_vertex1.y,tri_vertex2.y,tri_vertex3.y),
+                    compute_smallest(tri_vertex1.z,tri_vertex2.z,tri_vertex3.z));
+
+  vec maximum = vec(compute_largest(tri_vertex1.x,tri_vertex2.x,tri_vertex3.x),
+                    compute_largest(tri_vertex1.y,tri_vertex2.y,tri_vertex3.y),
+                    compute_largest(tri_vertex1.z,tri_vertex2.z,tri_vertex3.z));
+  this->box = aabb(minimum,maximum);
 }
 
 /*
@@ -75,6 +96,5 @@ color triangle::get_base_color() const {
 }
 
 aabb triangle::bounding_box() const {
-  vec temp = vec();
-  return aabb(temp,temp);
+  return this->box;
 }

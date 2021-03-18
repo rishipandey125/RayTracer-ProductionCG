@@ -20,7 +20,6 @@ const float EPSILON = 0.0001;
 
 hittables load_obj_file(std::string inputfile) {
   tinyobj::ObjReaderConfig reader_config;
-  // reader_config.mtl_search_path = "./"; // Path to material files
 
   tinyobj::ObjReader reader;
 
@@ -35,14 +34,17 @@ hittables load_obj_file(std::string inputfile) {
     std::cout << "TinyObjReader: " << reader.Warning();
   }
 
-  // auto& attrib = reader.GetAttrib();
+  auto& attrib = reader.GetAttrib();
   auto& shapes = reader.GetShapes();
   // auto& materials = reader.GetMaterials();
   hittables mesh;
+
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {
     // Loop over faces(polygon)
     size_t index_offset = 0;
+    std::vector <vec> vertex_normals = {}
+    //Loop Over Each Triangle
     for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
       int fv = shapes[s].mesh.num_face_vertices[f];
       point vertex1;
@@ -63,17 +65,15 @@ hittables load_obj_file(std::string inputfile) {
         } else if (v == 2) {
           vertex3 = vertex;
         };
-        tinyobj::real_t nx = attrib.normals[3*idx.normal_index+0];
-        tinyobj::real_t ny = attrib.normals[3*idx.normal_index+1];
-        tinyobj::real_t nz = attrib.normals[3*idx.normal_index+2];
       }
       index_offset += fv;
-      mesh.add(new triangle(vertex1,vertex2,vertex3,color(1,0,0)));
       // per-face material
       shapes[s].mesh.material_ids[f];
     }
   }
-  // std::cerr << mesh.geo.size() << std::endl;
+  //parse the information and then create a new traingle
+  mesh.add(new triangle(vertex1,vertex2,vertex3,color(1,0,0)));
+  //also add the new normal vector to the triangle class
   return mesh;
 }
 /*
@@ -93,8 +93,9 @@ color shading(point &hit_point, vec &normal_vector,point &point_light, color &ba
   //shadow shading constant
   float shadow = 0.15;
   float diffuse = normal_vector.dot(light_vector);
-  diffuse += shadow;
+  // diffuse += shadow;
   //add specular component here
+
   color shade = base_color * diffuse;
   //clamping pixel values
   shade.clamp();
@@ -121,7 +122,7 @@ color output_color(color &pixel, int samples) {
 void render_frame() {
 
   //Creating a Camera
-  camera cam(point(0,7,15),point(0,0,0),1,1,2);
+  camera cam(point(0,2,10),point(0,0,0),1,1,2);
   //Creating a Point Light
   point point_light(.5,1,3);
   //Image Sizes
@@ -136,7 +137,7 @@ void render_frame() {
   //   color col_rand = color(random_float(),random_float(),random_float());
   //   scene_geometry.add(new sphere(point(random_float(-40,40),random_float(-40,40),random_float(-80.0,-150.0)), 1, col_rand));
   // }
-  // bvh bvh_t = bvh(scene_geometry.geo,128);
+  bvh bvh_t = bvh(scene_geometry.geo,128);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
@@ -180,7 +181,7 @@ void render_frame() {
           ray casted_ray = cam.cast_perspective_ray(u,v);
           hit_record rec;
           //if a hit was found shade!
-          if (scene_geometry.hit(casted_ray,0.0,RAND_MAX,rec)) {
+          if (bvh_t.hit(casted_ray,0.0,RAND_MAX,rec)) {
             point hit_point = rec.hit_point;
             vec normal = rec.normal;
             //check to make sure the normal vector is facing the correct way
