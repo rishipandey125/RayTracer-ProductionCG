@@ -1,4 +1,4 @@
-g++ -std=c++11 main.cpp #compile raytracer
+g++ -std=c++11 -O3  main.cpp #compile raytracer
 # ./a.out
-./a.out > image.ppm #write to image
+./a.out 1> image.ppm #write to image
 # open image.ppm #open image

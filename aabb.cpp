@@ -38,7 +38,7 @@ bool aabb::check_hit(ray &casted_ray, float t_min, float t_max) {
     float max_val = (this->maximum[i]-casted_ray.origin[i]) / casted_ray.direction[i];
     float t0 = fmin(min_val,max_val);
     float t1 = fmax(min_val,max_val);
-    t_min = fmax(t0,t_min)
+    t_min = fmax(t0,t_min);
     t_max = fmin(t1,t_max);
     if (t_max <= t_min) {
       return false;

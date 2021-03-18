@@ -1,41 +1,54 @@
 #include "bvh.h"
+#include <unistd.h>
 
 bvh::bvh() {}
 
-bvh::bvh(hittables  &hittable_list, int num_geo) {
-  if (scene_geometry.size() <= num_geo) {
-   this = hittable_list;
-   this->left = NULL;
-   this->right = NULL;
-   this->box = geometry_box(scene_geometry);
-   //create a leaf
- } else {
-   // this->leaf_geometry = NULL;
-   this->leaf = false;
-   //get the bounding box of the scene geometry
-   //partition the data and make a left and right node    this->left = bvh(left_scene_geometry, num_geo);
-   std::vector<geometry*> left_scene_geometry;
-   std::vector<geometry*> right_scene_geometry;
-   point midpoint = get_midpoint(scene_geometry);
-   int index = random_float(0,3);
-   for (int i = 0; i < scene_geometry.size(); i++) {
-     if (scene_geometry[i]->bounding_box().centroid[index] < midpoint[index]) {
-       left_scene_geometry.push_back(scene_geometry[i]);
-     } else {
-       right_scene_geometry.push_back(scene_geometry[i]);
-     }
-   }
-   this->left = new bvh(left_scene_geometry,num_geo);
-   this->right = new bvh(right_scene_geometry,num_geo);
-   // this->box = geometry_box(scene_geometry);
-   this->box = this->left->box.surrounding_box(this->right->box);
- }
+point get_midpoint(std::vector <geometry*> &geo, int &index) {
+  point midpoint = point();
+  for (int i = 0; i < geo.size(); i++) {
+    point centroid = geo[i]->bounding_box().centroid;
+    midpoint = midpoint + centroid;
+  }
+  midpoint = midpoint/geo.size();
+  return midpoint;
 }
 
-float bvh::hit(ray &casted_ray) const {
+bvh::bvh(std::vector <geometry*> scene_geometry, int num_geo) {
+  std::vector<geometry*> left_scene_geometry;
+  std::vector<geometry*> right_scene_geometry;
+  int spread_index = random_int(0,3);
+  point midpoint = get_midpoint(scene_geometry, spread_index);
+  for (int i = 0; i < scene_geometry.size(); i++) {
+    if (scene_geometry[i]->bounding_box().centroid[spread_index] < midpoint[spread_index]) {
+      left_scene_geometry.push_back(scene_geometry[i]);
+    } else {
+      right_scene_geometry.push_back(scene_geometry[i]);
+    }
+  }
+  if (left_scene_geometry.size() <= num_geo) {
+    this->left = new hittables(left_scene_geometry);
+  } else {
+    this->left = new bvh(left_scene_geometry,num_geo);
+  }
+  if (right_scene_geometry.size() <= num_geo) {
+    this->right = new hittables(right_scene_geometry);
+  } else {
+    this->right = new bvh(right_scene_geometry,num_geo);
+  }
+  aabb right_box = this->right->bounding_box();
+  aabb left_box = this->left->bounding_box();
+  this->box = left_box.surrounding_box(right_box);
+  // this->box.centroid.print();
+}
+
+bool bvh::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const {
   aabb bb = this->box;
-  float t = bb.check_hit(casted_ray);
-  return t;
+  if (!bb.check_hit(casted_ray,t_min,t_max)) {
+    return false;
+  }
+  bool hit_left = this->left->hit(casted_ray,t_min,t_max,rec);
+  bool hit_right = this->right->hit(casted_ray,t_min,hit_left ? rec.t : t_max, rec);
+  return hit_left || hit_right;
 }
 
 /*
