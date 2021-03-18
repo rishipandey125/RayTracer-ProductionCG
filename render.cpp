@@ -1,5 +1,6 @@
 #include <iostream>
-#include <stdio.h>
+#define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
+#include "tinyobjloader-master/tiny_obj_loader.h"
 #include "vec.cpp"
 #include "ray.cpp"
 #include "aabb.cpp"
@@ -17,6 +18,64 @@
 //Constant Epsilon
 const float EPSILON = 0.0001;
 
+hittables load_obj_file(std::string inputfile) {
+  tinyobj::ObjReaderConfig reader_config;
+  // reader_config.mtl_search_path = "./"; // Path to material files
+
+  tinyobj::ObjReader reader;
+
+  if (!reader.ParseFromFile(inputfile, reader_config)) {
+    if (!reader.Error().empty()) {
+        std::cerr << "TinyObjReader: " << reader.Error();
+    }
+    exit(1);
+  }
+
+  if (!reader.Warning().empty()) {
+    std::cout << "TinyObjReader: " << reader.Warning();
+  }
+
+  // auto& attrib = reader.GetAttrib();
+  auto& shapes = reader.GetShapes();
+  // auto& materials = reader.GetMaterials();
+  hittables mesh;
+  // Loop over shapes
+  for (size_t s = 0; s < shapes.size(); s++) {
+    // Loop over faces(polygon)
+    size_t index_offset = 0;
+    for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+      int fv = shapes[s].mesh.num_face_vertices[f];
+      point vertex1;
+      point vertex2;
+      point vertex3;
+      // Loop over vertices in the face.
+      for (size_t v = 0; v < fv; v++) {
+        // access to vertex
+        tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+        tinyobj::real_t vx = attrib.vertices[3*idx.vertex_index+0];
+        tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
+        tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
+        point vertex(vx,vy,vz);
+        if (v == 0) {
+          vertex1 = vertex;
+        } else if (v == 1) {
+          vertex2 = vertex;
+        } else if (v == 2) {
+          vertex3 = vertex;
+        };
+        tinyobj::real_t nx = attrib.normals[3*idx.normal_index+0];
+        tinyobj::real_t ny = attrib.normals[3*idx.normal_index+1];
+        tinyobj::real_t nz = attrib.normals[3*idx.normal_index+2];
+      }
+      index_offset += fv;
+      mesh.add(new triangle(vertex1,vertex2,vertex3,color(1,0,0)));
+      // per-face material
+      shapes[s].mesh.material_ids[f];
+    }
+  }
+  // std::cerr << mesh.geo.size() << std::endl;
+  return mesh;
+}
 /*
 Shading Function - Blinn-Phong Lambertian Shading and Shadows:
 @param hit_point: the point to shade
@@ -60,10 +119,11 @@ color output_color(color &pixel, int samples) {
 
 //Function to Render Image
 void render_frame() {
+
   //Creating a Camera
-  camera cam(point(0,0,0),point(0,0,-1),1,1,2);
+  camera cam(point(0,7,15),point(0,0,0),1,1,2);
   //Creating a Point Light
-  point point_light(.5,1,0);
+  point point_light(.5,1,3);
   //Image Sizes
   int image_width = 1000/2;
   int image_height = (int)(image_width/cam.aspect_ratio);
@@ -71,11 +131,12 @@ void render_frame() {
   int num_spheres = 1e4;
 
   hittables scene_geometry;
-  for (int i = 0; i < num_spheres; i++) {
-    color col_rand = color(random_float(),random_float(),random_float());
-    scene_geometry.add(new sphere(point(random_float(-40,40),random_float(-40,40),random_float(-80.0,-150.0)), 1, col_rand));
-  }
-  bvh bvh_t = bvh(scene_geometry.geo,128);
+  scene_geometry = load_obj_file("teapot.obj");
+  // for (int i = 0; i < num_spheres; i++) {
+  //   color col_rand = color(random_float(),random_float(),random_float());
+  //   scene_geometry.add(new sphere(point(random_float(-40,40),random_float(-40,40),random_float(-80.0,-150.0)), 1, col_rand));
+  // }
+  // bvh bvh_t = bvh(scene_geometry.geo,128);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
@@ -119,7 +180,7 @@ void render_frame() {
           ray casted_ray = cam.cast_perspective_ray(u,v);
           hit_record rec;
           //if a hit was found shade!
-          if (bvh_t.hit(casted_ray,0.0,RAND_MAX,rec)) {
+          if (scene_geometry.hit(casted_ray,0.0,RAND_MAX,rec)) {
             point hit_point = rec.hit_point;
             vec normal = rec.normal;
             //check to make sure the normal vector is facing the correct way

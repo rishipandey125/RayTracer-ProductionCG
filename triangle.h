@@ -1,6 +1,7 @@
 #ifndef TRIANGLE_H
 #define triangle_H
 #include "geometry.h"
+#include "aabb.h"
 #include "ray.h"
 #include "vec.h"
 //Header File for Triangle Class
@@ -23,6 +24,7 @@ class triangle : public geometry {
     vec edge2;
     vec normal_vector;
     color base_color;
+    aabb box;
 };
 
 #endif

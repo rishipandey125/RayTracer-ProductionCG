@@ -17,6 +17,11 @@ triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, colo
   this->edge2 = this->vertex3-this->vertex1;
   this->normal_vector = ((this->edge1).cross(this->edge2));
   this->base_color = geo_base_color;
+  // vec minimum = vec();
+  // vec maximum = vec();
+  // for (int x = 0; x < 3; x++) {
+  //
+  // }
 }
 
 /*
