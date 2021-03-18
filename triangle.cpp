@@ -36,7 +36,7 @@ triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, vec 
   this->vertex3_norm = tri_vert_n3;
   this->edge1 = this->vertex2-this->vertex1;
   this->edge2 = this->vertex3-this->vertex1;
-  this->normal_vector = this->vertex1_norm;
+  this->normal_vector = vec();
   this->base_color = geo_base_color;
   vec minimum = vec(compute_smallest(tri_vertex1.x,tri_vertex2.x,tri_vertex3.x),
                     compute_smallest(tri_vertex1.y,tri_vertex2.y,tri_vertex3.y),
@@ -90,7 +90,21 @@ Getting the Normal Vector of the Triangle
 @return: normal vector
 */
 vec triangle::get_normal_vector(point &point_on_triangle) const {
-  return this->normal_vector;
+  // vec v0 = this->edge1;
+  // vec v1 = this->edge2;
+  vec v2 = hit_point - this->vertex1;
+  float d00 = this->edge1.dot(this->edge1);
+  float d01 = this->edge1.dot(this->edge2);
+  float d11 = this->edge2.dot(this->edge2);
+  float d20 = v2.dot(this->edge1);
+  float d21 = v2.dot(this->edge2);
+  float denom = (d00 * d11)-(d01*d01);
+  float v = (d11 * d20 - d01 * d21) / denom;
+  float w = (d00 * d21 - d01 * d20) / denom;
+  float u = 1.0f - v - w;
+  vec normal = (this->vertex1_norm * u) + (this->vertex2_norm * v) + (this->vertex3_norm * w);
+  this->normal_vector = normal;
+  return normal;
 }
 
 //returns the base color of the triangle
