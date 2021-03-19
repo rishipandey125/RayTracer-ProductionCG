@@ -4,6 +4,7 @@
 #include "ray.h"
 #include "aabb.h"
 
+//Hit Record for Hiting an Object
 struct hit_record {
   point hit_point;
   vec normal;

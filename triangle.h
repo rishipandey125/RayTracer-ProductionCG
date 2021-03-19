@@ -13,7 +13,7 @@ class triangle : public geometry {
       vec tri_vert_n1, vec tri_vert_n2, vec tri_vert_n3, color geo_base_color);
     //Geometry Functions
     bool hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const override;
-    vec get_normal_vector(point &point_on_triangle) const override;
+    vec get_normal_vector(point &hit_point) const override;
     color get_base_color() const override;
     aabb bounding_box() const override;
     //Verticies

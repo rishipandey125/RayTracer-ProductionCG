@@ -1,8 +1,14 @@
 #include "bvh.h"
 #include <unistd.h>
 
+//BVH Default Constructor
 bvh::bvh() {}
 
+/*
+Get Midpoint of Geometry
+@param geo: vector of geometry
+@param index: index to pass back axis
+*/
 point get_midpoint(std::vector <geometry*> &geo, int &index) {
   point midpoint = point();
   for (int i = 0; i < geo.size(); i++) {
@@ -13,11 +19,19 @@ point get_midpoint(std::vector <geometry*> &geo, int &index) {
   return midpoint;
 }
 
+/*
+BVH Specific Constructor
+@param scene_geometry: vector of geometry
+@param num_geo: allowed number of geometry in the leaf
+*/
 bvh::bvh(std::vector <geometry*> scene_geometry, int num_geo) {
+  //vectors for geo after split
   std::vector<geometry*> left_scene_geometry;
   std::vector<geometry*> right_scene_geometry;
+  //index for spread
   int spread_index = random_int(0,3);
   point midpoint = get_midpoint(scene_geometry, spread_index);
+  //split the geometry
   for (int i = 0; i < scene_geometry.size(); i++) {
     if (scene_geometry[i]->bounding_box().centroid[spread_index] < midpoint[spread_index]) {
       left_scene_geometry.push_back(scene_geometry[i]);
@@ -25,6 +39,7 @@ bvh::bvh(std::vector <geometry*> scene_geometry, int num_geo) {
       right_scene_geometry.push_back(scene_geometry[i]);
     }
   }
+  //create a new node or leaf
   if (left_scene_geometry.size() <= num_geo) {
     this->left = new hittables(left_scene_geometry);
   } else {
@@ -35,12 +50,18 @@ bvh::bvh(std::vector <geometry*> scene_geometry, int num_geo) {
   } else {
     this->right = new bvh(right_scene_geometry,num_geo);
   }
+  //get the surrounding box
   aabb right_box = this->right->bounding_box();
   aabb left_box = this->left->bounding_box();
   this->box = left_box.surrounding_box(right_box);
-  // this->box.centroid.print();
 }
 
+/*
+BVH Hit Function
+@param casted_ray: ray casted into the scene
+@param t_min & t_max: max and min t values for parametric hit
+@param rec: record to store a hit
+*/
 bool bvh::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const {
   aabb bb = this->box;
   if (!bb.check_hit(casted_ray,t_min,t_max)) {

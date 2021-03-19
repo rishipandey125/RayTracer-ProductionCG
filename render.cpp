@@ -18,6 +18,10 @@
 //Constant Epsilon
 const float EPSILON = 0.0001;
 
+/*
+OBJ Loading Function:
+@return hittables: mesh of triangles in the form of a hittables
+*/
 hittables load_obj_file(std::string inputfile) {
   tinyobj::ObjReaderConfig reader_config;
 
@@ -39,7 +43,6 @@ hittables load_obj_file(std::string inputfile) {
   // auto& materials = reader.GetMaterials();
   hittables mesh;
   std::vector <vec> vertices = {};
-  std::vector <vec> vertex_normals = {};
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {
     // Loop over faces(polygon)
@@ -47,9 +50,6 @@ hittables load_obj_file(std::string inputfile) {
     //Loop Over Each Triangle
     for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
       int fv = shapes[s].mesh.num_face_vertices[f];
-      point vertex1;
-      point vertex2;
-      point vertex3;
       // Loop over vertices in the face.
       for (size_t v = 0; v < fv; v++) {
         // access to vertex
@@ -58,13 +58,18 @@ hittables load_obj_file(std::string inputfile) {
         tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
         tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
         vertices.push_back(vec(vx,vy,vz));
-        vertex_normals.push_back(vec());
       }
       index_offset += fv;
       // per-face material
       shapes[s].mesh.material_ids[f];
     }
   }
+
+  std::vector <vec> vertex_normals = {};
+  for (int i = 0; i < attrib.vertices.size() / 3; i++) {
+      vertex_normals.push_back(vec());
+  }
+
   int num_triangles = vertices.size()/3;
   for (int i = 0; i < num_triangles; i++) {
     vec vertex1 = vertices[i*3];
@@ -73,25 +78,30 @@ hittables load_obj_file(std::string inputfile) {
     vec edge1 = vertex2 - vertex1;
     vec edge2 = vertex3 - vertex1;
     vec face_normal = edge1.cross(edge2);
+
     for (int x = 0; x < 3; x++) {
-      vertex_normals[(i*3)+x] = vertex_normals[(i*3)+x] + face_normal;
+      int idx = shapes[0].mesh.indices[3*i+x].vertex_index;
+      vertex_normals[idx] = vertex_normals[idx] + face_normal;
     }
   }
-
+  //create the mesh
   for (int i = 0; i < num_triangles; i++) {
     vec vertex1 = vertices[i*3];
     vec vertex2 = vertices[(i*3)+1];
     vec vertex3 = vertices[(i*3)+2];
-    vec v_n1 = vertex_normals[i*3];
-    vec v_n2 = vertex_normals[(i*3)+1];
-    vec v_n3 = vertex_normals[(i*3)+2];
+    int idx1 = shapes[0].mesh.indices[3*i].vertex_index;
+    int idx2 = shapes[0].mesh.indices[3*i+1].vertex_index;
+    int idx3 = shapes[0].mesh.indices[3*i+2].vertex_index;
+    vec v_n1 = vertex_normals[idx1];
+    vec v_n2 = vertex_normals[idx2];
+    vec v_n3 = vertex_normals[idx3];
     v_n1.unit(); v_n2.unit(); v_n3.unit();
     mesh.add(new triangle(vertex1,vertex2,vertex3,v_n1,v_n2,v_n3,color(1,0,0)));
   }
-  //parse the information and then create a new traingle
-  //also add the new normal vector to the triangle class
+
   return mesh;
 }
+
 /*
 Shading Function - Blinn-Phong Lambertian Shading and Shadows:
 @param hit_point: the point to shade
@@ -101,18 +111,23 @@ Shading Function - Blinn-Phong Lambertian Shading and Shadows:
 @param scene_geometry: geometry in the scene to check for shadows
 @return shade: color to shade the pixel
 */
-color shading(point &hit_point, vec &normal_vector,point &point_light, color &base_color) {
+color shading(point &hit_point,point &camera_origin, vec &normal_vector,point &point_light, color &base_color) {
   vec light_vector = point_light-hit_point;
   light_vector.unit();
+  vec view = camera_origin-hit_point;
+  view.unit();
   vec epsilon(EPSILON,EPSILON,EPSILON);
   // ray shadow_ray(hit_point+epsilon,light_vector);
   //shadow shading constant
-  float shadow = 0.15;
+  // float shadow = 0.15;
   float diffuse = normal_vector.dot(light_vector);
   // diffuse += shadow;
   //add specular component here
-
-  color shade = base_color * diffuse;
+  vec h = light_vector + view;
+  h.unit();
+  //ks = 0.2 & n = 200
+  float specular = 0.3 * pow(normal_vector.dot(h),200.0);
+  color shade = base_color * (diffuse+specular);
   //clamping pixel values
   shade.clamp();
   return shade;
@@ -136,28 +151,28 @@ color output_color(color &pixel, int samples) {
 
 //Function to Render Image
 void render_frame() {
-
+  hittables scene_geometry;
+  scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
-  camera cam(point(0,2,10),point(0,0,0),1,1,2);
+  point look_at = scene_geometry.geo[0]->bounding_box().centroid;
+  camera cam(point(2.0,1.5,2.8),look_at+vec(0,0,2),1,1,2);
   //Creating a Point Light
-  point point_light(.5,1,3);
+  point point_light(1.5,0,1.5);
   //Image Sizes
   int image_width = 1000/2;
   int image_height = (int)(image_width/cam.aspect_ratio);
   //Creating Scene Geometry
-  int num_spheres = 1e4;
-
-  hittables scene_geometry;
-  scene_geometry = load_obj_file("teapot.obj");
+  // int num_spheres = 10;
   // for (int i = 0; i < num_spheres; i++) {
   //   color col_rand = color(random_float(),random_float(),random_float());
-  //   scene_geometry.add(new sphere(point(random_float(-40,40),random_float(-40,40),random_float(-80.0,-150.0)), 1, col_rand));
+  //   scene_geometry.add(new sphere(point(random_float(-2,2),random_float(-2,2),random_float(-8.0,-15.0)), 1, col_rand));
   // }
-  bvh bvh_t = bvh(scene_geometry.geo,128);
+  //Creating BVH
+  bvh bvh_t = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 2;
+  int samples = 1;
   int sqrt_samples = sqrt(float(samples));
   //Creating Canonical Arrangement: From Pixar Paper (Correlated Multi-Jitter Sampling)
   float canonical[sqrt_samples][sqrt_samples][2];
@@ -197,7 +212,7 @@ void render_frame() {
           ray casted_ray = cam.cast_perspective_ray(u,v);
           hit_record rec;
           //if a hit was found shade!
-          if (bvh_t.hit(casted_ray,0.0,RAND_MAX,rec)) {
+          if (scene_geometry.hit(casted_ray,0.0,RAND_MAX,rec)) {
             point hit_point = rec.hit_point;
             vec normal = rec.normal;
             //check to make sure the normal vector is facing the correct way
@@ -207,7 +222,7 @@ void render_frame() {
             normal.unit();
             color base_color = rec.base_color;
             //shade the pixel
-            shade = shade + shading(hit_point,normal,point_light,base_color);
+            shade = shade + shading(hit_point,cam.origin,normal,point_light,base_color);
           }
         }
       }

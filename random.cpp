@@ -13,6 +13,7 @@ float random_float(float min, float max) {
   return min + ((max-min)*random_float());
 }
 
+//Generates Random int between min and max
 int random_int(int min, int max) {
   return min + ((max-min)*(rand()/RAND_MAX));
 }

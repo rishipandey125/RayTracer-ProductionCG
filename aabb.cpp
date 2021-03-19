@@ -21,6 +21,10 @@ aabb::aabb(point a, point b) {
 
 }
 
+/*
+Equal Overload:
+@param box: box to compare
+*/
 void aabb::operator=(const aabb &box) {
   this->minimum = box.minimum;
   this->maximum = box.maximum;
@@ -30,7 +34,9 @@ void aabb::operator=(const aabb &box) {
 /*
 Hit Function for AABB:
 @param casted_ray: ray casted at geometry
-@return: -1 for no hit, and 1 for hit
+@param float t_min: min t parametric value
+@param float t_max: max t parametric value
+@return: false for no hit, and true for hit
 */
 bool aabb::check_hit(ray &casted_ray, float t_min, float t_max) {
   for (int i = 0; i < 3; i++) {
@@ -47,6 +53,11 @@ bool aabb::check_hit(ray &casted_ray, float t_min, float t_max) {
   return true;
 }
 
+/*
+Creating Surrounding Box for AABB:
+@param box: box to help create surronding box with the current box
+@return: the surronding box
+*/
 aabb aabb::surrounding_box(aabb &box) {
   point min = point(fmin(this->minimum.x,box.minimum.x),
   fmin(this->minimum.y,box.minimum.y),

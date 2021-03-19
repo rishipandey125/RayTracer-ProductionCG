@@ -4,7 +4,7 @@
 //Default Constructor
 triangle::triangle() {}
 
-
+//smallest value of x y and z
 float compute_smallest(float x, float y, float z) {
   float smallest = x;
   if (y < smallest)
@@ -14,6 +14,7 @@ float compute_smallest(float x, float y, float z) {
   return smallest;
 }
 
+//largest value of x y and z
 float compute_largest(float x, float y, float z) {
   float largest = x;
   if (y > largest)
@@ -49,9 +50,10 @@ triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, vec 
 }
 
 /*
-Hit Function for Triangle:
-@param casted_ray: ray casted at geometry
-@return: -1 for no hit, and t (parametric value on ray) for a hit
+Triangle Hit Function
+@param casted_ray: ray casted into the scene
+@param t_min & t_max: max and min t values for parametric hit
+@param rec: record to store a hit
 */
 bool triangle::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const {
   float epsilon = 0.0000001;
@@ -89,7 +91,7 @@ bool triangle::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec)
 Getting the Normal Vector of the Triangle
 @return: normal vector
 */
-vec triangle::get_normal_vector(point &point_on_triangle) const {
+vec triangle::get_normal_vector(point &hit_point) const {
   // vec v0 = this->edge1;
   // vec v1 = this->edge2;
   vec v2 = hit_point - this->vertex1;
@@ -101,9 +103,10 @@ vec triangle::get_normal_vector(point &point_on_triangle) const {
   float denom = (d00 * d11)-(d01*d01);
   float v = (d11 * d20 - d01 * d21) / denom;
   float w = (d00 * d21 - d01 * d20) / denom;
-  float u = 1.0f - v - w;
+  float u = 1.0 - v - w;
   vec normal = (this->vertex1_norm * u) + (this->vertex2_norm * v) + (this->vertex3_norm * w);
-  this->normal_vector = normal;
+  // vec normal = this->vertex1_norm;
+  // this->normal_vector = normal;
   return normal;
 }
 
@@ -112,6 +115,7 @@ color triangle::get_base_color() const {
   return this->base_color;
 }
 
+//returns triangle bounding box
 aabb triangle::bounding_box() const {
   return this->box;
 }

@@ -21,9 +21,11 @@ sphere::sphere(point sphere_center, float sphere_radius, color geo_base_color) {
 }
 
 /*
-Hit Function for Sphere:
-@param casted_ray: ray casted at geometry
-@return: -1 for no hit, and t (parametric value on ray) for a hit
+Sphere Hit Function
+@param casted_ray: ray casted into the scene
+@param t_min & t_max: max and min t values for parametric hit
+@param rec: record to store a hit
+@return true or false on hit
 */
 bool sphere::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const {
   vec ac = casted_ray.origin-this->center;

@@ -45,7 +45,7 @@ Cross Function:
 @param vector: vector to cross with current vector
 @return vec product of cross
 */
-vec vec::cross(const vec &vector) {
+vec vec::cross(const vec &vector) const {
   float x = (this->y*vector.z) - (this->z*vector.y);
   float y = -1.0*((this->x*vector.z) - (this->z*vector.x));
   float z = (this->x*vector.y) - (this->y*vector.x);
