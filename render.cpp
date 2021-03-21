@@ -126,7 +126,7 @@ color shading(point &hit_point,point &camera_origin, vec &normal_vector,point &p
   vec h = light_vector + view;
   h.unit();
   //ks = 0.2 & n = 200
-  float specular = 0.3 * pow(normal_vector.dot(h),200.0);
+  float specular = 0.5 * fmax(pow(normal_vector.dot(h),200.0),0.0);
   color shade = base_color * (diffuse+specular);
   //clamping pixel values
   shade.clamp();
@@ -152,27 +152,21 @@ color output_color(color &pixel, int samples) {
 //Function to Render Image
 void render_frame() {
   hittables scene_geometry;
-  scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
-  point look_at = scene_geometry.geo[0]->bounding_box().centroid;
-  camera cam(point(2.0,1.5,2.8),look_at+vec(0,0,2),1,1,2);
+  camera cam(point(0,0,0),point(0,0,-1),1,1,2);
   //Creating a Point Light
-  point point_light(1.5,0,1.5);
+  point point_light(1.5,1,-0.5);
   //Image Sizes
   int image_width = 1000/2;
   int image_height = (int)(image_width/cam.aspect_ratio);
-  //Creating Scene Geometry
-  // int num_spheres = 10;
-  // for (int i = 0; i < num_spheres; i++) {
-  //   color col_rand = color(random_float(),random_float(),random_float());
-  //   scene_geometry.add(new sphere(point(random_float(-2,2),random_float(-2,2),random_float(-8.0,-15.0)), 1, col_rand));
-  // }
+  // Creating Scene Geometry
+  scene_geometry.add(new plane(point(-5,-3,0),point(5,-2,0),point(-5,-3,-100),point(5,-3,-100),color(1,0,0)));
   //Creating BVH
   bvh bvh_t = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 1;
+  int samples = 2;
   int sqrt_samples = sqrt(float(samples));
   //Creating Canonical Arrangement: From Pixar Paper (Correlated Multi-Jitter Sampling)
   float canonical[sqrt_samples][sqrt_samples][2];

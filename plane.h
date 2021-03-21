@@ -3,6 +3,8 @@
 #include "geometry.h"
 #include "ray.h"
 #include "vec.h"
+#include "aabb.h"
+#include "helpers.cpp"
 //Header File for Plane Class
 class plane : public geometry {
   public:
@@ -26,6 +28,8 @@ class plane : public geometry {
     vec normal_vector;
     //Plane Base Color
     color base_color;
+    //bounding box
+    aabb box;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include "aabb.h"
 #include "ray.h"
 #include "vec.h"
+#include "helpers.cpp"
 //Header File for Triangle Class
 class triangle : public geometry {
   public:

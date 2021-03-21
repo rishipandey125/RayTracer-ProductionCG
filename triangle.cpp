@@ -4,25 +4,6 @@
 //Default Constructor
 triangle::triangle() {}
 
-//smallest value of x y and z
-float compute_smallest(float x, float y, float z) {
-  float smallest = x;
-  if (y < smallest)
-    smallest = y;
-  if (z < smallest)
-    smallest = z;
-  return smallest;
-}
-
-//largest value of x y and z
-float compute_largest(float x, float y, float z) {
-  float largest = x;
-  if (y > largest)
-    largest = y;
-  if (z > largest)
-    largest = z;
-  return largest;
-}
 /*
 Specific Constructor:
 @param tri_vertex1, tri_vertex2, tri_vertex3: vertices of triangle

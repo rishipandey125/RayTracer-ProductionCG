@@ -21,6 +21,7 @@ plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, poin
   //Crossing Edge 1 and 2 for the Plane's Normal Vector
   this->normal_vector = ((this->edge1).cross(this->edge2));
   this->base_color = geo_base_color;
+  //compute and set the bounding box for the rectangle
 }
 
 /*
@@ -58,6 +59,5 @@ color plane::get_base_color() const {
 
 //NOT USED
 aabb plane::bounding_box() const {
-  vec temp = vec();
-  return aabb(temp,temp);
+  return this->box;
 }
