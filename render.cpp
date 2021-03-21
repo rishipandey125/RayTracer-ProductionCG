@@ -161,12 +161,14 @@ void render_frame() {
   int image_height = (int)(image_width/cam.aspect_ratio);
   // Creating Scene Geometry
   scene_geometry.add(new plane(point(-5,-3,0),point(5,-2,0),point(-5,-3,-100),point(5,-3,-100),color(1,0,0)));
+  scene_geometry.add(new sphere(point(0,0,-6),1.0,color(0,1,0)));
+  scene_geometry.add(new sphere(point(2,0,-8),1.0,color(0,0,1)));
   //Creating BVH
   bvh bvh_t = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 2;
+  int samples = 16;
   int sqrt_samples = sqrt(float(samples));
   //Creating Canonical Arrangement: From Pixar Paper (Correlated Multi-Jitter Sampling)
   float canonical[sqrt_samples][sqrt_samples][2];
@@ -206,7 +208,7 @@ void render_frame() {
           ray casted_ray = cam.cast_perspective_ray(u,v);
           hit_record rec;
           //if a hit was found shade!
-          if (scene_geometry.hit(casted_ray,0.0,RAND_MAX,rec)) {
+          if (bvh_t.hit(casted_ray,0.0,RAND_MAX,rec)) {
             point hit_point = rec.hit_point;
             vec normal = rec.normal;
             //check to make sure the normal vector is facing the correct way

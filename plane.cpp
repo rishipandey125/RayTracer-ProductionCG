@@ -21,7 +21,16 @@ plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, poin
   //Crossing Edge 1 and 2 for the Plane's Normal Vector
   this->normal_vector = ((this->edge1).cross(this->edge2));
   this->base_color = geo_base_color;
+
+  vec minimum = vec(compute_smallest(plane_vertex1.x,plane_vertex2.x,plane_vertex3.x,plane_vertex4.x),
+                    compute_smallest(plane_vertex1.y,plane_vertex2.y,plane_vertex3.y,plane_vertex4.y),
+                    compute_smallest(plane_vertex1.z,plane_vertex2.z,plane_vertex3.z,plane_vertex4.z));
+
+  vec maximum = vec(compute_largest(plane_vertex1.x,plane_vertex2.x,plane_vertex3.x,plane_vertex4.x),
+                    compute_largest(plane_vertex1.y,plane_vertex2.y,plane_vertex3.y,plane_vertex4.y),
+                    compute_largest(plane_vertex1.z,plane_vertex2.z,plane_vertex3.z,plane_vertex4.z));
   //compute and set the bounding box for the rectangle
+  this->box = aabb(minimum,maximum);
 }
 
 /*
