@@ -111,15 +111,16 @@ Trace function, traces rays through the scene based on the trace depth, and mate
 */
 color trace(ray &casted_ray, bvh &tree, int depth) {
   if (depth <= 0) {
-    return color();
+    return color(0,0,0);
   }
   hit_record rec;
   if (tree.hit(casted_ray,0.0,float(RAND_MAX),rec)) {
     ray next_ray;
+    rec.normal.unit();
     if (rec.geo_material->scatter(casted_ray,rec,next_ray)) {
       return trace(next_ray,tree,depth-1)*rec.geo_material->base_color;
     } else {
-      return color();
+      return color(0,0,0);
     }
   }
   //gradient sky (global illumination)
@@ -138,7 +139,7 @@ Correctly Outputting Averaged Pixel Color After Multi-Jitter Sampling:
 color output_color(color &pixel, int samples) {
   float ratio = 1.0/float(samples);
   color output_pixel = pixel*ratio;
-  //gamma correction
+  //gamma correction gamma = 2.0
   output_pixel.root();
   output_pixel.clamp();
   return output_pixel;
@@ -150,21 +151,21 @@ void render_frame() {
   //Creating Scene Geometry
   // hittables scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
-  camera cam(point(0,0,5),point(0,0,-1),1,1,2);
+  camera cam(point(0,3,4),point(0,0,-1),1,1,2);
   //Image Sizes
-  int image_width = 1000/2;
+  int image_width = 1000;
   int image_height = (int)(image_width/cam.aspect_ratio);
   // Creating Scene Geometry
   hittables scene_geometry;
-  scene_geometry.add(new plane(point(-5,-3,0),point(5,-3,0),point(-5,-3,-100),point(5,-3,-100),new metal(color(.2,.2,.2),0.0)));
-  scene_geometry.add(new sphere(point(0,0,-9),1.0,new diffuse(color(0,0,1))));
-  scene_geometry.add(new sphere(point(2,0,-8),1.0,new diffuse(color(0,0,1))));
+  scene_geometry.add(new plane(point(-5,0,10),point(5,0,10),point(-5,0,-100),point(5,0,-100),new diffuse(color(1,0,0))));
+  scene_geometry.add(new sphere(point(0,.5,-4),1.0,new metal(color(.75,.75,.75),0)));
+  scene_geometry.add(new sphere(point(2,.5,-3),1.0,new diffuse(color(0,0,1))));
   //Creating BVH
-  bvh tree = bvh(scene_geometry.geo,10);
+  bvh tree = bvh(scene_geometry.geo,5);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 70;
+  int samples = 1;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
