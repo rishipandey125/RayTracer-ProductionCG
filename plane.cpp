@@ -9,7 +9,7 @@ Specific Constructor
 @param plane_vertex1, plane_vertex2, plane_vertex3, plane_vertex4: vertex points for the plane
 @param geo_base_color: color of the plane
 */
-plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, point plane_vertex4, color geo_base_color) {
+plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, point plane_vertex4, material geo_material) {
   this->vertex1 = plane_vertex1;
   this->vertex2 = plane_vertex2;
   this->vertex3 = plane_vertex3;
@@ -20,7 +20,7 @@ plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, poin
   this->edge2 = this->vertex3-this->vertex1;
   //Crossing Edge 1 and 2 for the Plane's Normal Vector
   this->normal_vector = ((this->edge1).cross(this->edge2));
-  this->base_color = geo_base_color;
+  this->geo_material = geo_material;
 
   vec minimum = vec(compute_smallest(plane_vertex1.x,plane_vertex2.x,plane_vertex3.x,plane_vertex4.x),
                     compute_smallest(plane_vertex1.y,plane_vertex2.y,plane_vertex3.y,plane_vertex4.y),
@@ -62,8 +62,8 @@ vec plane::get_normal_vector(point &point_on_plane) const {
 }
 
 //Getting Base Color of Plane
-color plane::get_base_color() const {
-  return this->base_color;
+material plane::get_material() const {
+  return this->geo_material;
 }
 
 //NOT USED

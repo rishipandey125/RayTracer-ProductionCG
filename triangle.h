@@ -4,6 +4,7 @@
 #include "aabb.h"
 #include "ray.h"
 #include "vec.h"
+#include "material.h"
 #include "helpers.cpp"
 //Header File for Triangle Class
 class triangle : public geometry {
@@ -11,11 +12,11 @@ class triangle : public geometry {
     //Constructors
     triangle();
     triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3,
-      vec tri_vert_n1, vec tri_vert_n2, vec tri_vert_n3, color geo_base_color);
+      vec tri_vert_n1, vec tri_vert_n2, vec tri_vert_n3, material geo_material);
     //Geometry Functions
     bool hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const override;
     vec get_normal_vector(point &hit_point) const override;
-    color get_base_color() const override;
+    material get_material() const override;
     aabb bounding_box() const override;
     //Verticies
     point vertex1;
@@ -28,7 +29,7 @@ class triangle : public geometry {
     vec edge1;
     vec edge2;
     vec normal_vector;
-    color base_color;
+    material geo_material;
     aabb box;
 };
 

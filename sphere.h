@@ -4,21 +4,22 @@
 #include "ray.h"
 #include "vec.h"
 #include "aabb.h"
+#include "material.h"
 //Header File for Sphere Class
 class sphere : public geometry {
   public:
     //Constructors
     sphere();
-    sphere(point sphere_center, float sphere_radius, color geo_base_color);
+    sphere(point sphere_center, float sphere_radius, material geo_material);
     //Geometry Functions
     bool hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const override;
     vec get_normal_vector(point &point_on_sphere) const override;
-    color get_base_color() const override;
+    material get_material() const override;
     aabb bounding_box() const override;
     //Member Variables
     point center;
     float radius;
-    color base_color;
+    material geo_material;
     aabb bb;
 };
 

@@ -9,7 +9,7 @@ Specific Constructor:
 @param tri_vertex1, tri_vertex2, tri_vertex3: vertices of triangle
 @param geo_base_color: base color of triangle
 */
-triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, vec tri_vert_n1, vec tri_vert_n2, vec tri_vert_n3, color geo_base_color) {
+triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, vec tri_vert_n1, vec tri_vert_n2, vec tri_vert_n3, material geo_material) {
   this->vertex1 = tri_vertex1;
   this->vertex2 = tri_vertex2;
   this->vertex3 = tri_vertex3;
@@ -19,7 +19,7 @@ triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, vec 
   this->edge1 = this->vertex2-this->vertex1;
   this->edge2 = this->vertex3-this->vertex1;
   this->normal_vector = vec();
-  this->base_color = geo_base_color;
+  this->geo_material = geo_material;
   vec minimum = vec(compute_smallest(tri_vertex1.x,tri_vertex2.x,tri_vertex3.x),
                     compute_smallest(tri_vertex1.y,tri_vertex2.y,tri_vertex3.y),
                     compute_smallest(tri_vertex1.z,tri_vertex2.z,tri_vertex3.z));
@@ -92,8 +92,8 @@ vec triangle::get_normal_vector(point &hit_point) const {
 }
 
 //returns the base color of the triangle
-color triangle::get_base_color() const {
-  return this->base_color;
+material triangle::get_material() const {
+  return this->geo_material;
 }
 
 //returns triangle bounding box

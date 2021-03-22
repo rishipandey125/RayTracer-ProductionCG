@@ -102,35 +102,15 @@ hittables load_obj_file(std::string inputfile) {
   return mesh;
 }
 
-/*
-Shading Function - Blinn-Phong Lambertian Shading and Shadows:
-@param hit_point: the point to shade
-@param normal_vector: the normal vector of the geometry at that point
-@param point_light: location of the light source
-@param base_color: base color of the geometry
-@param scene_geometry: geometry in the scene to check for shadows
-@return shade: color to shade the pixel
-*/
-color shading(point &hit_point,point &camera_origin, vec &normal_vector,point &point_light, color &base_color) {
-  vec light_vector = point_light-hit_point;
-  light_vector.unit();
-  vec view = camera_origin-hit_point;
-  view.unit();
-  vec epsilon(EPSILON,EPSILON,EPSILON);
-  // ray shadow_ray(hit_point+epsilon,light_vector);
-  //shadow shading constant
-  // float shadow = 0.15;
-  float diffuse = normal_vector.dot(light_vector);
-  // diffuse += shadow;
-  //add specular component here
-  vec h = light_vector + view;
-  h.unit();
-  //ks = 0.2 & n = 200
-  float specular = 0.5 * fmax(pow(normal_vector.dot(h),200.0),0.0);
-  color shade = base_color * (diffuse+specular);
-  //clamping pixel values
-  shade.clamp();
-  return shade;
+color trace(ray &casted_ray, bvh &tree, int depth) {
+  if (depth <= 0) {
+    return color();
+  }
+  hit_record rec;
+  if (tree.hit(casted_ray,0.0,float(RAND_MAX),rec)) {
+    
+  }
+
 }
 
 /*
@@ -164,7 +144,7 @@ void render_frame() {
   scene_geometry.add(new sphere(point(0,0,-6),1.0,color(0,1,0)));
   scene_geometry.add(new sphere(point(2,0,-8),1.0,color(0,0,1)));
   //Creating BVH
-  bvh bvh_t = bvh(scene_geometry.geo,10);
+  bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
@@ -182,7 +162,6 @@ void render_frame() {
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
-      color shade; //initializes shade color to (0,0,0) which is black - the background
       //multi-jitter sampling - shuffle canonical arrangement
       //preserving n-rooks
       for (int y = 0; y < sqrt_samples; y++) {
@@ -201,25 +180,14 @@ void render_frame() {
       //fire rays for samples
       for (int ys = 0; ys < sqrt_samples; ys++) {
         for (int xs = 0; xs < sqrt_samples; xs++) {
+          color shade; //initializes shade color to (0,0,0) which is black - the background
           //use the multi-jitter shuffled samples
           float u = (float(i)+canonical[ys][xs][0])/image_width;
           float v = (float(j)+canonical[ys][xs][0])/image_width;
           //cast ray into the scene
           ray casted_ray = cam.cast_perspective_ray(u,v);
-          hit_record rec;
-          //if a hit was found shade!
-          if (bvh_t.hit(casted_ray,0.0,RAND_MAX,rec)) {
-            point hit_point = rec.hit_point;
-            vec normal = rec.normal;
-            //check to make sure the normal vector is facing the correct way
-            if (normal.dot(casted_ray.direction) > 0.0) {
-              normal = normal * -1.0;
-            }
-            normal.unit();
-            color base_color = rec.base_color;
-            //shade the pixel
-            shade = shade + shading(hit_point,cam.origin,normal,point_light,base_color);
-          }
+          //trace some gosh darn rays
+          shade = shade + trace(casted_ray,tree,50);
         }
       }
       //get the correct output color

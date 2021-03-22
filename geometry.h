@@ -3,6 +3,7 @@
 #include "vec.h"
 #include "ray.h"
 #include "aabb.h"
+#include "material.h"
 
 //Hit Record for Hiting an Object
 struct hit_record {
@@ -16,7 +17,7 @@ class geometry {
   public:
     virtual bool hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const = 0;
     virtual vec get_normal_vector(point &point_on_surface) const = 0;
-    virtual color get_base_color() const = 0;
+    virtual material get_material() const = 0;
     virtual aabb bounding_box() const = 0;
 };
 
