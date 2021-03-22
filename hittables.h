@@ -1,9 +1,5 @@
 #ifndef HITTABLES_H
 #define HITTABLES_H
-#include "geometry.h"
-#include "aabb.h"
-#include "ray.h"
-#include "vec.h"
 #include <vector>
 
 class hittables : public geometry {

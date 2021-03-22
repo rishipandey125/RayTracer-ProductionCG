@@ -1,10 +1,5 @@
 #ifndef SPHERE_H
 #define SPHERE_H
-#include "geometry.h"
-#include "ray.h"
-#include "vec.h"
-#include "aabb.h"
-#include "material.h"
 //Header File for Sphere Class
 class sphere : public geometry {
   public:

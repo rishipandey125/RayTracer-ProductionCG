@@ -1,6 +1,5 @@
 #ifndef RAY_H
 #define RAY_H
-#include "vec.h"
 //Header File for Ray Class
 class ray {
   public:

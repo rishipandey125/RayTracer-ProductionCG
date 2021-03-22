@@ -1,12 +1,5 @@
 #ifndef BVH_H
 #define BVH_H
-#include "geometry.h"
-#include "hittables.h"
-#include "aabb.h"
-#include "ray.h"
-#include "vec.h"
-#include "random.cpp"
-// class material;
 #include <vector>
 
 class bvh : public geometry {

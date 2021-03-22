@@ -1,7 +1,5 @@
 #ifndef AABB_H
 #define AABB_H
-#include "ray.h"
-#include "vec.h"
 //Header File for AABB Class
 class aabb {
   public:

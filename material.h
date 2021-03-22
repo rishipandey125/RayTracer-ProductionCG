@@ -1,8 +1,5 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
-#include "ray.h"
-#include "vec.h"
-#include "random.cpp"
 #include "hit.h"
 #include <cmath>
 

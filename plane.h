@@ -1,10 +1,5 @@
 #ifndef PLANE_H
 #define PLANE_H
-#include "geometry.h"
-#include "ray.h"
-#include "vec.h"
-#include "aabb.h"
-#include "material.h"
 #include "helpers.cpp"
 //Header File for Plane Class
 class plane : public geometry {

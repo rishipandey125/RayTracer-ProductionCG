@@ -1,7 +1,5 @@
 #ifndef HIT_H
 #define HIT_H
-// #include "vec.h"
-// #include "ray.h"
 
 class material;
 

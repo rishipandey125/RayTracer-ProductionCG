@@ -1,10 +1,5 @@
 #ifndef TRIANGLE_H
 #define triangle_H
-#include "geometry.h"
-#include "aabb.h"
-#include "ray.h"
-#include "vec.h"
-#include "material.h"
 #include "helpers.cpp"
 //Header File for Triangle Class
 class triangle : public geometry {

@@ -4,14 +4,14 @@
 #include "vec.cpp"
 #include "ray.cpp"
 #include "aabb.cpp"
+#include "random.cpp"
+#include "geometry.h"
+#include "hittables.cpp"
 #include "bvh.cpp"
 #include "camera.cpp"
-#include "geometry.h"
 #include "sphere.cpp"
 #include "triangle.cpp"
 #include "plane.cpp"
-#include "hittables.cpp"
-#include "random.cpp"
 #include <vector>
 
 //Render File

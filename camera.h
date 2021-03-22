@@ -1,7 +1,5 @@
 #ifndef CAMERA_H
 #define CAMERA_H
-#include "vec.h"
-#include "ray.h"
 //Header File for Camera Class
 class camera {
   public:

@@ -1,8 +1,5 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
-#include "vec.h"
-#include "ray.h"
-#include "aabb.h"
 #include "material.h"
 
 
