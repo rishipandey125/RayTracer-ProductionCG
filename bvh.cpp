@@ -81,11 +81,9 @@ vec bvh::get_normal_vector(point &point_on_sphere) const {
   return vec();
 }
 
-/*
-@return the base color of the sphere
-*/
-color bvh::get_base_color() const {
-  return vec();
+//not used
+material bvh::get_material() const {
+  return material();
 }
 
 aabb bvh::bounding_box() const {

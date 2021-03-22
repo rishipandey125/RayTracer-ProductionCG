@@ -17,3 +17,10 @@ float random_float(float min, float max) {
 int random_int(int min, int max) {
   return min + ((max-min)*(rand()/RAND_MAX));
 }
+
+vec random_unit_vec() {
+  float a = random_float(0.0,2.0*M_PI);
+  float z = random_float(-1.0,1.0);
+  float r = sqrt(1-(z*z));
+  return vec(r*cos(a),r*sin(a),z);
+}

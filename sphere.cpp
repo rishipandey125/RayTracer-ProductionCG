@@ -42,7 +42,7 @@ bool sphere::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) c
     rec.t = t;
     rec.hit_point = casted_ray.get_point_at(t);
     rec.normal = this->get_normal_vector(rec.hit_point);
-    rec.base_color = this->get_base_color();
+    rec.geo_material = this->get_material();
     return true;
   }
   return false;

@@ -41,8 +41,8 @@ vec hittables::get_normal_vector(point &point_on_sphere) const {
 }
 
 //UNUSED
-color hittables::get_base_color() const {
-  return vec();
+material hittables::get_material() const {
+  return material();
 }
 
 /*
