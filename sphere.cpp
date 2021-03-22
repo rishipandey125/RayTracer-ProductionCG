@@ -58,12 +58,15 @@ vec sphere::get_normal_vector(point &point_on_sphere) const {
 }
 
 /*
-@return the base color of the sphere
+@return the material of the sphere
 */
 material * sphere::get_material() const {
   return this->geo_material;
 }
 
+/*
+returning the bounding box of the sphere
+*/
 aabb sphere::bounding_box() const {
   return this->bb;
 }

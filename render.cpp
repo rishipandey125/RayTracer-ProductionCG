@@ -102,6 +102,13 @@ hittables load_obj_file(std::string inputfile) {
   return mesh;
 }
 
+/*
+Trace function, traces rays through the scene based on the trace depth, and materials of the hit objects.
+@param casted_ray: ray casted into the scene
+@param tree: the bvh tree of scene Geometry
+@param depth: depth of ray bounces
+@return the color after tracing
+*/
 color trace(ray &casted_ray, bvh &tree, int depth) {
   if (depth <= 0) {
     return color();
@@ -140,6 +147,7 @@ color output_color(color &pixel, int samples) {
 
 //Function to Render Image
 void render_frame() {
+  //Creating Scene Geometry
   hittables scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
   camera cam(point(0,0,5),point(0,0,-1),1,1,2);

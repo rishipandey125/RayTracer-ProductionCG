@@ -18,6 +18,7 @@ int random_int(int min, int max) {
   return min + ((max-min)*(rand()/RAND_MAX));
 }
 
+//Generates a Random Unit Vector
 vec random_unit_vec() {
   float a = random_float(0.0,2.0*M_PI);
   float z = random_float(-1.0,1.0);

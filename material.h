@@ -17,6 +17,9 @@ class material {
     }
 };
 
+/*
+Diffuse material with a base color. The scatter function works similar to shader.
+*/
 class diffuse: public material {
   public:
     diffuse(color b_color) {

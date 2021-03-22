@@ -61,7 +61,7 @@ vec plane::get_normal_vector(point &point_on_plane) const {
   return (this->normal_vector);
 }
 
-//Getting Base Color of Plane
+//Getting Material of the Plane
 material * plane::get_material() const {
   return this->geo_material;
 }

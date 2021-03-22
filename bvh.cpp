@@ -86,6 +86,10 @@ material * bvh::get_material() const {
   return new material();
 }
 
+/*
+Getting the bounding box of the sphere.
+@return: the sphere's bounding box
+*/
 aabb bvh::bounding_box() const {
   return this->box;
 }
