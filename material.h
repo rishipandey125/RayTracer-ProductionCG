@@ -96,7 +96,7 @@ class dielectric: public material {
       vec dir = casted_ray.direction;
       vec n = rec.normal;
       float ni_over_nt;
-      dir.unit();
+      // dir.unit();
       if (dir.dot(n) > 0) {
         n = n * -1.0;
         ni_over_nt = refractive_index;
@@ -104,18 +104,19 @@ class dielectric: public material {
         ni_over_nt = 1.0/refractive_index;
       }
       float cosine = n.dot(dir*-1.0);
-      float sin =  sqrt(1.0-(cosine*cosine));
-      if (ni_over_nt * sin > 1.0) {
-        vec reflect_vec = reflect(dir,n);
-        next_ray = ray(rec.hit_point,reflect_vec);
-        return true;
-      }
-      vec scatter;
-      if (random_float() < schlick(cosine,refractive_index)) {
-        scatter = reflect(dir,n);
-      } else {
-        scatter = refract(dir,n,cosine,ni_over_nt);
-      }
+      // float sin =  sqrt(1.0-(cosine*cosine));
+      // if (ni_over_nt * sin > 1.0) {
+      //   vec reflect_vec = reflect(dir,n);
+      //   next_ray = ray(rec.hit_point,reflect_vec);
+      //   return true;
+      // }
+      // vec scatter;
+      // if (random_float() < schlick(cosine,refractive_index)) {
+      //   scatter = reflect(dir,n);
+      // } else {
+        // scatter = refract(dir,n,cosine,ni_over_nt);
+      // }
+      vec scatter = refract(dir,n,cosine,ni_over_nt);
       next_ray = ray(rec.hit_point,scatter);
       return true;
     }
