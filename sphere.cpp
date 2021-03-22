@@ -11,7 +11,7 @@ Specific Constructor:
 @param sphere_radius: float radius of the sphere
 @param geo_base_color: base color of the geometry
 */
-sphere::sphere(point sphere_center, float sphere_radius, material geo_material) {
+sphere::sphere(point sphere_center, float sphere_radius, material *geo_material) {
   this->center = sphere_center;
   this->radius = sphere_radius;
   this->geo_material = geo_material;
@@ -60,7 +60,7 @@ vec sphere::get_normal_vector(point &point_on_sphere) const {
 /*
 @return the base color of the sphere
 */
-material sphere::get_material() const {
+material * sphere::get_material() const {
   return this->geo_material;
 }
 

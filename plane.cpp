@@ -9,7 +9,7 @@ Specific Constructor
 @param plane_vertex1, plane_vertex2, plane_vertex3, plane_vertex4: vertex points for the plane
 @param geo_base_color: color of the plane
 */
-plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, point plane_vertex4, material geo_material) {
+plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, point plane_vertex4, material * geo_material) {
   this->vertex1 = plane_vertex1;
   this->vertex2 = plane_vertex2;
   this->vertex3 = plane_vertex3;
@@ -62,7 +62,7 @@ vec plane::get_normal_vector(point &point_on_plane) const {
 }
 
 //Getting Base Color of Plane
-material plane::get_material() const {
+material * plane::get_material() const {
   return this->geo_material;
 }
 

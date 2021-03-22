@@ -82,8 +82,8 @@ vec bvh::get_normal_vector(point &point_on_sphere) const {
 }
 
 //not used
-material bvh::get_material() const {
-  return material();
+material * bvh::get_material() const {
+  return new material();
 }
 
 aabb bvh::bounding_box() const {

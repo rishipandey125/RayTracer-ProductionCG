@@ -3,9 +3,9 @@
 #include "ray.h"
 #include "vec.h"
 #include "random.cpp"
-// #include "hit.h"
+#include "hit.h"
 #include <cmath>
-struct hit_record;
+
 /*
 Material Class
 Materials: Glass, Metal, and Diffuse
@@ -28,7 +28,7 @@ class diffuse: public material {
     virtual bool scatter(ray &casted_ray, hit_record &rec, ray &next_ray) {
       point target = rec.hit_point + rec.normal + random_unit_vec();
       vec scatter = target-rec.hit_point;
-      record.next_ray = ray(rec.hit_point,scatter);
+      next_ray = ray(rec.hit_point,scatter);
       return true;
     }
 };

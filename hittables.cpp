@@ -41,8 +41,8 @@ vec hittables::get_normal_vector(point &point_on_sphere) const {
 }
 
 //UNUSED
-material hittables::get_material() const {
-  return material();
+material * hittables::get_material() const {
+  return new material();
 }
 
 /*

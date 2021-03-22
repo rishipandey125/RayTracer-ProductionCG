@@ -9,7 +9,7 @@ Specific Constructor:
 @param tri_vertex1, tri_vertex2, tri_vertex3: vertices of triangle
 @param geo_base_color: base color of triangle
 */
-triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, vec tri_vert_n1, vec tri_vert_n2, vec tri_vert_n3, material geo_material) {
+triangle::triangle(point tri_vertex1, point tri_vertex2, point tri_vertex3, vec tri_vert_n1, vec tri_vert_n2, vec tri_vert_n3, material * geo_material) {
   this->vertex1 = tri_vertex1;
   this->vertex2 = tri_vertex2;
   this->vertex3 = tri_vertex3;
@@ -92,7 +92,7 @@ vec triangle::get_normal_vector(point &hit_point) const {
 }
 
 //returns the base color of the triangle
-material triangle::get_material() const {
+material * triangle::get_material() const {
   return this->geo_material;
 }
 

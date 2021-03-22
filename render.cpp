@@ -96,7 +96,7 @@ hittables load_obj_file(std::string inputfile) {
     vec v_n2 = vertex_normals[idx2];
     vec v_n3 = vertex_normals[idx3];
     v_n1.unit(); v_n2.unit(); v_n3.unit();
-    mesh.add(new triangle(vertex1,vertex2,vertex3,v_n1,v_n2,v_n3,diffuse(color(1,0,0))));
+    mesh.add(new triangle(vertex1,vertex2,vertex3,v_n1,v_n2,v_n3,new diffuse(color(1,0,0))));
   }
 
   return mesh;
@@ -109,7 +109,7 @@ color trace(ray &casted_ray, bvh &tree, int depth) {
   hit_record rec;
   if (tree.hit(casted_ray,0.0,float(RAND_MAX),rec)) {
     ray next_ray;
-    if (rec.geo_material.scatter(casted_ray,tree,next_ray)) {
+    if (rec.geo_material->scatter(casted_ray,rec,next_ray)) {
       return trace(next_ray,tree,depth-1);
     } else {
       return color();
@@ -149,9 +149,9 @@ void render_frame() {
   int image_width = 1000/2;
   int image_height = (int)(image_width/cam.aspect_ratio);
   // Creating Scene Geometry
-  scene_geometry.add(new plane(point(-5,-3,0),point(5,-2,0),point(-5,-3,-100),point(5,-3,-100),diffuse(color(1,0,0))));
-  scene_geometry.add(new sphere(point(0,0,-6),1.0,diffuse(color(0,1,0))));
-  scene_geometry.add(new sphere(point(2,0,-8),1.0,diffuse(color(0,0,1))));
+  scene_geometry.add(new plane(point(-5,-3,0),point(5,-2,0),point(-5,-3,-100),point(5,-3,-100),new diffuse(color(1,0,0))));
+  scene_geometry.add(new sphere(point(0,0,-6),1.0,new diffuse(color(0,1,0))));
+  scene_geometry.add(new sphere(point(2,0,-8),1.0,new diffuse(color(0,0,1))));
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
