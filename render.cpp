@@ -148,62 +148,36 @@ color output_color(color &pixel, int samples) {
 //Function to Render Image
 void render_frame() {
   //Creating Scene Geometry
-  hittables scene_geometry = load_obj_file("dragon.obj");
+  // hittables scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
   camera cam(point(0,0,5),point(0,0,-1),1,1,2);
   //Image Sizes
   int image_width = 1000/2;
   int image_height = (int)(image_width/cam.aspect_ratio);
   // Creating Scene Geometry
-  // scene_geometry.add(new plane(point(-5,-3,0),point(5,-3,0),point(-5,-3,-100),point(5,-3,-100),new diffuse(color(1,0,0))));
-  // scene_geometry.add(new sphere(point(0,0,-6),1.0,new diffuse(color(0,1,0))));
-  // scene_geometry.add(new sphere(point(2,0,-8),1.0,new diffuse(color(0,0,1))));
+  hittables scene_geometry;
+  scene_geometry.add(new plane(point(-5,-3,0),point(5,-3,0),point(-5,-3,-100),point(5,-3,-100),new metal(color(.2,.2,.2),0.0)));
+  scene_geometry.add(new sphere(point(0,0,-9),1.0,new diffuse(color(0,0,1))));
+  scene_geometry.add(new sphere(point(2,0,-8),1.0,new diffuse(color(0,0,1))));
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 16;
-  int sqrt_samples = sqrt(float(samples));
-  //Creating Canonical Arrangement: From Pixar Paper (Correlated Multi-Jitter Sampling)
-  float canonical[sqrt_samples][sqrt_samples][2];
-  float n = float(sqrt_samples);
-  for (int j = 0; j < sqrt_samples; j++) {
-    for (int i = 0; i < sqrt_samples; i++) {
-      canonical[j][i][0] = (i + (j+random_float())/n)/n;
-      canonical[j][i][1] = (j + (i+random_float())/n)/n;
-    }
-  }
+  int samples = 70;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
-      //multi-jitter sampling - shuffle canonical arrangement
-      //preserving n-rooks
-      for (int y = 0; y < sqrt_samples; y++) {
-        for (int x = 0; x < sqrt_samples; x++) {
-          int k = y + random_float() * (sqrt_samples-y);
-          std::swap(canonical[y][x][0],canonical[k][x][0]);
-        }
-      }
-      for (int x = 0; x < sqrt_samples; x++) {
-        for (int y = 0; y < sqrt_samples; y++) {
-          int k = x + random_float() * (sqrt_samples-x);
-          std::swap(canonical[y][x][1],canonical[y][k][1]);
-        }
-      }
       color shade; //initializes shade color to (0,0,0) which is black - the background
-      //n-rooks preserved next step...
       //fire rays for samples
-      for (int ys = 0; ys < sqrt_samples; ys++) {
-        for (int xs = 0; xs < sqrt_samples; xs++) {
+      for (int s = 0; s < samples; s++) {
           //use the multi-jitter shuffled samples
-          float u = (float(i)+canonical[ys][xs][0])/image_width;
-          float v = (float(j)+canonical[ys][xs][0])/image_width;
+        float u = (float(i)+random_float())/image_width;
+        float v = (float(j)+random_float())/image_width;
           //cast ray into the scene
-          ray casted_ray = cam.cast_perspective_ray(u,v);
+        ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-          shade = shade + trace(casted_ray,tree,50);
-        }
+        shade = shade + trace(casted_ray,tree,50);
       }
       //get the correct output color
       color output = output_color(shade,samples);
