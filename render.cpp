@@ -151,22 +151,21 @@ void render_frame() {
   //Creating Scene Geometry
   // hittables scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
-  camera cam(point(0,1,4),point(0,0,-1),1,1,2);
+  camera cam(point(0,1,4),point(0,0,-1),1,1,30);
   //Image Sizes
   int image_width = 1000;
   int image_height = (int)(image_width/cam.aspect_ratio);
   // Creating Scene Geometry
   hittables scene_geometry;
   scene_geometry.add(new plane(point(-5,0,10),point(5,0,10),point(-5,0,-100),point(5,0,-100),new diffuse(color(1,0,0))));
-  scene_geometry.add(new sphere(point(0,1,-2),1.0,new dielectric(1.5)));
-  scene_geometry.add(new sphere(point(0,1,-4),-0.95,new dielectric(1.5)));
+  scene_geometry.add(new sphere(point(0,1,-2),1.0,new diffuse(color(0,1,0))));
   scene_geometry.add(new sphere(point(2,1,-3),1.0,new diffuse(color(0,0,1))));
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,5);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 100;
+  int samples = 1;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
