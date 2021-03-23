@@ -11,21 +11,22 @@ Specific Constructor:
 @camera_aspect_ratio: float specifying the aspect ratio of the image outputed by the camera sensor
 @camera_viewport_height: float specifying the height of the viewport
 */
-camera::camera(point camera_origin, point camera_look_at,
-      float camera_focal_length, float camera_aspect_ratio,
+camera::camera(point camera_origin, point camera_look_at, float camera_aspect_ratio,
       float v_fov) {
   this->origin = camera_origin;
   this->look_at = camera_look_at;
-  this->focal_length = camera_focal_length;
   this->aspect_ratio = camera_aspect_ratio;
   float theta = v_fov * (M_PI/180.0);
   this->viewport_height = 2.0 * tan(theta/2.0);
-  this->viewport_width = this->viewport_height*camera_aspect_ratio;
+  // std::cout << this->viewport_height << std::endl;
+  this->viewport_width = this->viewport_height*this->aspect_ratio;
+  // std::cout << this->viewport_width << std::endl;
   this->horizontal = vec(this->viewport_width,0,0);
   this->vertical = vec(0,this->viewport_height,0);
   this->w = camera_origin-camera_look_at;
   w.unit();
-  this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-vec(0,0,this->focal_length)-w;
+  this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-w;
+  // this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-vec(0,0,this->focal_length)-w;
 
 }
 

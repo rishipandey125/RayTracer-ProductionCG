@@ -25,3 +25,14 @@ vec random_unit_vec() {
   float r = sqrt(1-(z*z));
   return vec(r*cos(a),r*sin(a),z);
 }
+
+//returns vec random in the unit disk
+vec random_in_unit_disk() {
+  while (true) {
+    vec p = vec(random_float(-1,1),random_float(-1,1),0);
+    if (p.length() >= 1) {
+      continue;
+    }
+    return p;
+  }
+}
