@@ -96,7 +96,7 @@ hittables load_obj_file(std::string inputfile) {
     vec v_n2 = vertex_normals[idx2];
     vec v_n3 = vertex_normals[idx3];
     v_n1.unit(); v_n2.unit(); v_n3.unit();
-    mesh.add(new triangle(vertex1,vertex2,vertex3,v_n1,v_n2,v_n3,new diffuse(color(1,0,0))));
+    mesh.add(new triangle(vertex1,vertex2,vertex3,v_n1,v_n2,v_n3,new diffuse(color(.58,.44,.859))));
   }
 
   return mesh;
@@ -149,18 +149,19 @@ color output_color(color &pixel, int samples) {
 //Function to Render Image
 void render_frame() {
   //Creating Scene Geometry
-  // hittables scene_geometry = load_obj_file("dragon.obj");
+  hittables scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
-  camera cam(point(0,0,0),point(0,0,-1),16.0/9.0,50);
+  camera cam(point(2,2,5),point(0,0,0),4.0/3.0,90,0);
   //Image Sizes
   int image_width = 1000;
 
   int image_height = (int)(image_width/cam.aspect_ratio);
   // Creating Scene Geometry
-  hittables scene_geometry;
-  scene_geometry.add(new plane(point(-5,-0.5,10),point(5,-0.5,10),point(-5,-0.5,-100),point(5,-0.5,-100),new diffuse(color(1,0,0))));
-  scene_geometry.add(new sphere(point(0,0,-1),0.5,new diffuse(color(0,1,0))));
-  // scene_geometry.add(new sphere(point(2,0.5,-3),0.5,new diffuse(color(0,0,1))));
+  // hittables scene_geometry;
+  scene_geometry.add(new plane(point(-5,-0.5,10),point(5,-0.5,10),point(-5,-0.5,-100),point(5,-0.5,-100),new diffuse(color(.75,.75,.75))));
+  // scene_geometry.add(new sphere(point(0,0,-1),0.5,new diffuse(color(0,1,0))));
+  // scene_geometry.add(new sphere(point(2,0,-3),0.5,new diffuse(color(0,0,1))));
+  // scene_geometry.add(new sphere(point(-2,0,-3),0.5,new diffuse(color(0,0,1))));
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,5);
   //Setting Up PPM Output
@@ -179,7 +180,7 @@ void render_frame() {
           //cast ray into the scene
         ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-        shade = shade + trace(casted_ray,tree,50);
+        shade = shade + trace(casted_ray,tree,1);
       }
       //get the correct output color
       color output = output_color(shade,samples);

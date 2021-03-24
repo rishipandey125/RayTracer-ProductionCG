@@ -7,23 +7,22 @@ class camera {
     camera();
     //Specified Constructor
     camera(point camera_origin, point camera_look_at, float camera_aspect_ratio,
-          float v_fov);
+          float v_fov, float apeture);
     //Cast Perspective Ray Function
     ray cast_perspective_ray(float &u, float &v);
-    //Cast Orthogonal Ray Function
-    ray cast_orthogonal_ray(float &u, float &v);
     //Camera Parameters
     point origin;
     point look_at;
-    float focal_length;
+    float focus_distance;
     float aspect_ratio;
     float viewport_height;
+    float lens_radius;
     //Calculated Ray Helper Vectors
     float viewport_width;
     point lower_left_corner;
     vec horizontal;
     vec vertical;
-    vec w;
+    vec u,v,w;
 
 };
 
