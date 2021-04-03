@@ -37,7 +37,11 @@ bool sphere::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) c
   if (discriminant > 0.0)  {
     float t = ((-b-sqrt(discriminant))/(2*a));
     if (t <= t_min || t > t_max) {
-      return false;
+      float t2 = ((-b+sqrt(discriminant))/(2*a));
+      if (t2 <= t_min || t2 > t_max) {
+        return false;
+      }
+      t = t2;
     }
     rec.t = t;
     rec.hit_point = casted_ray.get_point_at(t);

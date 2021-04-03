@@ -148,26 +148,26 @@ color output_color(color &pixel, int samples) {
 
 //Function to Render Image
 void render_frame() {
-  //Creating Scene Geometry
-  hittables scene_geometry = load_obj_file("dragon.obj");
+  // Creating Scene Geometry
+  // hittables scene_geometry = load_obj_file("teapot.obj");
   //Creating a Camera
-  camera cam(point(2,2,5),point(0,0,0),4.0/3.0,90,0);
+  camera cam(point(0,0,0),point(0,0,-1),4.0/3.0,90,0);
   //Image Sizes
   int image_width = 1000;
 
   int image_height = (int)(image_width/cam.aspect_ratio);
   // Creating Scene Geometry
-  // hittables scene_geometry;
+  hittables scene_geometry;
   scene_geometry.add(new plane(point(-5,-0.5,10),point(5,-0.5,10),point(-5,-0.5,-100),point(5,-0.5,-100),new diffuse(color(.75,.75,.75))));
-  // scene_geometry.add(new sphere(point(0,0,-1),0.5,new diffuse(color(0,1,0))));
+  scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
   // scene_geometry.add(new sphere(point(2,0,-3),0.5,new diffuse(color(0,0,1))));
   // scene_geometry.add(new sphere(point(-2,0,-3),0.5,new diffuse(color(0,0,1))));
   //Creating BVH
-  bvh tree = bvh(scene_geometry.geo,5);
+  bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 1;
+  int samples = 10;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
@@ -180,7 +180,7 @@ void render_frame() {
           //cast ray into the scene
         ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-        shade = shade + trace(casted_ray,tree,1);
+        shade = shade + trace(casted_ray,tree,50);
       }
       //get the correct output color
       color output = output_color(shade,samples);
