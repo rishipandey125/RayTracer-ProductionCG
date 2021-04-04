@@ -33,10 +33,10 @@ bool sphere::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) c
   float b = 2*casted_ray.direction.dot(ac);
   float c = ac.dot(ac) - (this->radius*this->radius);
   float discriminant = (b*b)-(4*a*c);
-  float t = 0.0;
   if (discriminant > 0.0)  {
     float t = ((-b-sqrt(discriminant))/(2*a));
     if (t <= t_min || t > t_max) {
+      return false;
       t = ((-b+sqrt(discriminant))/(2*a));
       if (t <= t_min || t > t_max) {
         return false;
