@@ -37,7 +37,6 @@ bool sphere::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) c
     float t = ((-b-sqrt(discriminant))/(2*a));
     if (t <= t_min || t > t_max) {
       t = ((-b+sqrt(discriminant))/(2*a));
-      //bug: second hit is firing at the incorrect moment
       if (t <= t_min || t > t_max) {
         return false;
       }

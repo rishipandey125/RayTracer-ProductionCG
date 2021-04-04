@@ -96,7 +96,7 @@ hittables load_obj_file(std::string inputfile) {
     vec v_n2 = vertex_normals[idx2];
     vec v_n3 = vertex_normals[idx3];
     v_n1.unit(); v_n2.unit(); v_n3.unit();
-    mesh.add(new triangle(vertex1,vertex2,vertex3,v_n1,v_n2,v_n3,new diffuse(color(.58,.44,.859))));
+    mesh.add(new triangle(vertex1,vertex2,vertex3,v_n1,v_n2,v_n3,new dielectric(1.5)));
   }
 
   return mesh;
@@ -151,7 +151,7 @@ void render_frame() {
   // Creating Scene Geometry
   // hittables scene_geometry = load_obj_file("teapot.obj");
   //Creating a Camera
-  camera cam(point(0,0,0),point(0,0,-1),4.0/3.0,90,0);
+  camera cam(point(0,0,2),point(0,0,-1),4.0/3.0,90,0);
   //Image Sizes
   int image_width = 1000;
 
@@ -159,14 +159,17 @@ void render_frame() {
   // Creating Scene Geometry
   hittables scene_geometry;
   scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(.75,.75,.75))));
-  // scene_geometry.add(new sphere(point(0,0,-1),-0.49,new dielectric(1.5)));
+  scene_geometry.add(new sphere(point(1,0,-1) ,.5,new diffuse(color(0,1,0))));
+  scene_geometry.add(new sphere(point(1,0,-2) ,.5,new diffuse(color(1,0,0))));
+  scene_geometry.add(new sphere(point(-1,0,-2) ,.5,new diffuse(color(0,0,1))));
   scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
+  scene_geometry.add(new sphere(point(0,0,-1) ,-0.4,new dielectric(1.5)));
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 100;
+  int samples = 5;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
@@ -179,7 +182,7 @@ void render_frame() {
           //cast ray into the scene
         ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-        shade = shade + trace(casted_ray,scene_geometry,50);
+        shade = shade + trace(casted_ray,tree,50);
       }
       //get the correct output color
       color output = output_color(shade,samples);
