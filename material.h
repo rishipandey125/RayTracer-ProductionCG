@@ -116,7 +116,7 @@ class dielectric: public material {
       // } else {
       //   scatter = refract(dir,n,cosine,ni_over_nt);
       // }
-      scatter = refract(dir,n,cosine,ni_over_nt);
+      // scatter = refract(dir,n,cosine,ni_over_nt);
       next_ray = ray(rec.hit_point,scatter);
       return true;
     }

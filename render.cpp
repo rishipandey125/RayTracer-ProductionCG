@@ -114,7 +114,7 @@ color trace(ray &casted_ray, geometry &scene_geometry, int depth) {
     return color(0,0,0);
   }
   hit_record rec;
-  if (scene_geometry.hit(casted_ray,0.0,float(RAND_MAX),rec)) {
+  if (scene_geometry.hit(casted_ray,0.001,float(RAND_MAX),rec)) {
     ray next_ray;
     rec.normal.unit();
     if (rec.geo_material->scatter(casted_ray,rec,next_ray)) {
@@ -159,8 +159,8 @@ void render_frame() {
   // Creating Scene Geometry
   hittables scene_geometry;
   scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(.75,.75,.75))));
-  // scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
-  scene_geometry.add(new sphere(point(0,0,-1),0.5,new diffuse(color(1,0,0))));
+  // scene_geometry.add(new sphere(point(0,0,-1),-0.49,new dielectric(1.5)));
+  scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
@@ -179,7 +179,7 @@ void render_frame() {
           //cast ray into the scene
         ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-        shade = shade + trace(casted_ray,tree,50);
+        shade = shade + trace(casted_ray,scene_geometry,50);
       }
       //get the correct output color
       color output = output_color(shade,samples);
