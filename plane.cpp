@@ -20,6 +20,7 @@ plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, poin
   this->edge2 = this->vertex3-this->vertex1;
   //Crossing Edge 1 and 2 for the Plane's Normal Vector
   this->normal_vector = ((this->edge1).cross(this->edge2));
+  this->normal_vector.unit();
   this->geo_material = geo_material;
 
   vec minimum = vec(compute_smallest(plane_vertex1.x,plane_vertex2.x,plane_vertex3.x,plane_vertex4.x),

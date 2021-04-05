@@ -116,7 +116,6 @@ color trace(ray &casted_ray, geometry &scene_geometry, int depth) {
   hit_record rec;
   if (scene_geometry.hit(casted_ray,0.001,float(RAND_MAX),rec)) {
     ray next_ray;
-    rec.normal.unit();
     if (rec.geo_material->scatter(casted_ray,rec,next_ray)) {
       return trace(next_ray,scene_geometry,depth-1)*rec.geo_material->base_color;
     } else {

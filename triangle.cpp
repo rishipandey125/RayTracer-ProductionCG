@@ -88,6 +88,7 @@ vec triangle::get_normal_vector(point &hit_point) const {
   vec normal = (this->vertex1_norm * u) + (this->vertex2_norm * v) + (this->vertex3_norm * w);
   // vec normal = this->vertex1_norm;
   // this->normal_vector = normal;
+  normal.unit();
   return normal;
 }
 

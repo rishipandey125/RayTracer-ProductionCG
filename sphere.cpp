@@ -53,9 +53,10 @@ bool sphere::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) c
 /*
 Getting the Normal Vector of the Point on the Sphere
 @param point_on_sphere: point to get normal vector at
-@return: normal vector
+@return: normal vector (as unit)
 */
 vec sphere::get_normal_vector(point &point_on_sphere) const {
+  vec normal = (point_on_sphere-this->center)/this->radius;
   return point_on_sphere-this->center;
 }
 
