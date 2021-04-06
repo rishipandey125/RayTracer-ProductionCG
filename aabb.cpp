@@ -56,7 +56,7 @@ bool aabb::check_hit(ray &casted_ray, float t_min, float t_max) {
 /*
 Creating Surrounding Box for AABB:
 @param box: box to help create surronding box with the current box
-@return: the surronding box
+@return: the surrounding box
 */
 aabb aabb::surrounding_box(aabb &box) {
   point min = point(fmin(this->minimum.x,box.minimum.x),

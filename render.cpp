@@ -126,8 +126,8 @@ color trace(ray &casted_ray, geometry &scene_geometry, int depth) {
   vec unit_direction = casted_ray.direction;
   unit_direction.unit();
   float val = (unit_direction.y+1.0)/2.0;
-  // return color();
-  return color(1.0, 1.0, 1.0)*(1-val) + color(0.5, 0.7, 1.0)*val;
+  return color();
+  // return color(1.0, 1.0, 1.0)*(1-val) + color(0.5, 0.7, 1.0)*val;
 }
 
 /*
@@ -159,16 +159,16 @@ void render_frame() {
   // Creating Scene Geometry
   hittables scene_geometry;
   //top light source
-  scene_geometry.add(new plane(point(-0.5,0,-2),point(-0.5,0.5,-2),point(0,0.5,-2),point(0,0,-2),new diffuse(color(1,1,1))));
+  scene_geometry.add(new plane(point(-1,1.5,-2),point(1,1.5,-2),point(-1,1.5,-3),point(1,1.5,-3),new diffuse_light(color(1,1,1))));
   scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(.75,.75,.75))));
-  scene_geometry.add(new sphere(point(1,0,-2),0.5,new diffuse(color(1,0,0))));
-  scene_geometry.add(new sphere(point(0.0,0,-2),0.5,new diffuse(color(0,1,0))));
+  scene_geometry.add(new sphere(point(1,0,-2.5),0.5,new diffuse(color(1,0,0))));
+  scene_geometry.add(new sphere(point(0.0,0,-2.5),0.5,new diffuse(color(0,1,0))));
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 50;
+  int samples = 100;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {

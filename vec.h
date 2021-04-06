@@ -6,7 +6,7 @@ class vec {
     //constructors
     vec();
     vec(float i, float j, float k);
-    //math helper functionss
+    //math helper functions
     float length();
     void unit();
     float dot(const vec &vector) const;

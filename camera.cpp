@@ -42,6 +42,5 @@ ray camera::cast_perspective_ray(float &u, float &v) {
   vec offset = (this->u*lens.x) + (this->v*lens.y);
   point viewport_point = this->lower_left_corner + (this->horizontal*u) + (this->vertical*v);
   vec direction = viewport_point-this->origin-offset;
-  // direction.unit();
   return ray(this->origin,direction);
 }

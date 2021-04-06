@@ -30,7 +30,7 @@ vec refract(vec &v, vec &n ,float &cos_theta, float ni_over_nt) {
   return r_out_perp + r_out_parallel;
 }
 
-//Schlicks Consant
+//Schlicks Constant
 float schlick(float cosine, float r_i) {
   float r0 = (1-r_i) / (1+r_i);
   r0 = r0*r0;
@@ -70,6 +70,9 @@ class diffuse: public material {
     }
 };
 
+/*
+Metal material with a base color and roughness scalar. The scatter function works similar to shader.
+*/
 class metal: public material {
   public:
     metal(color b_color, float f) {
@@ -88,6 +91,9 @@ class metal: public material {
     float fuzz;
 };
 
+/*
+Dielectric material with a refractive index. The scatter function works similar to shader.
+*/
 class dielectric: public material {
   public:
     dielectric(float r_i) {
@@ -125,6 +131,9 @@ class dielectric: public material {
     float refractive_index;
 };
 
+/*
+Diffuse light material with an emit color. The scatter function works similar to shader.
+*/
 class diffuse_light: public material {
   public:
     diffuse_light(color e_color) {
