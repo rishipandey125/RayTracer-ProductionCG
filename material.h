@@ -49,6 +49,9 @@ class material {
     virtual bool scatter(ray &casted_ray, hit_record &rec, ray &next_ray) {
       return false;
     }
+    virtual color emitted() const {
+      return color(0,0,0);
+    }
 };
 
 /*
@@ -120,5 +123,19 @@ class dielectric: public material {
       return true;
     }
     float refractive_index;
+};
+
+class diffuse_light: public material {
+  public:
+    diffuse_light(color e_color) {
+      emitt_color = e_color;
+    }
+    virtual bool scatter(ray &casted_ray, hit_record &rec, ray &next_ray) {
+      return false;
+    }
+    virtual color emitted() const override {
+      return emitt_color;
+    }
+    color emitt_color;
 };
 #endif
