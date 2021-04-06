@@ -23,15 +23,15 @@ plane::plane(point plane_vertex1, point plane_vertex2, point plane_vertex3, poin
   this->normal_vector.unit();
   this->geo_material = geo_material;
 
-  vec minimum = vec(compute_smallest(plane_vertex1.x,plane_vertex2.x,plane_vertex3.x,plane_vertex4.x),
+  this->min = vec(compute_smallest(plane_vertex1.x,plane_vertex2.x,plane_vertex3.x,plane_vertex4.x),
                     compute_smallest(plane_vertex1.y,plane_vertex2.y,plane_vertex3.y,plane_vertex4.y),
                     compute_smallest(plane_vertex1.z,plane_vertex2.z,plane_vertex3.z,plane_vertex4.z));
 
-  vec maximum = vec(compute_largest(plane_vertex1.x,plane_vertex2.x,plane_vertex3.x,plane_vertex4.x),
+  this->max = vec(compute_largest(plane_vertex1.x,plane_vertex2.x,plane_vertex3.x,plane_vertex4.x),
                     compute_largest(plane_vertex1.y,plane_vertex2.y,plane_vertex3.y,plane_vertex4.y),
                     compute_largest(plane_vertex1.z,plane_vertex2.z,plane_vertex3.z,plane_vertex4.z));
   //compute and set the bounding box for the rectangle
-  this->box = aabb(minimum,maximum);
+  this->box = aabb(this->min,this->max);
 }
 
 /*
@@ -48,8 +48,15 @@ bool plane::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) co
     if (t < t_min || t > t_max) {
       return false;
     }
+    point hit_point = casted_ray.get_point_at(t);
+    if (hit_point.x < this->min.x || hit_point.x > this->max.x)
+      return false;
+    else if (hit_point.y < this->min.y || hit_point.y > this->max.y)
+      return false;
+    else if (hit_point.z < this->min.z || hit_point.z > this->max.z)
+      return false;
     rec.t = t;
-    rec.hit_point = casted_ray.get_point_at(t);
+    rec.hit_point = hit_point;
     rec.normal = this->get_normal_vector(rec.hit_point);
     rec.geo_material = this->get_material();
     return true;

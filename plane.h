@@ -22,6 +22,8 @@ class plane : public geometry {
     vec edge1;
     vec edge2;
     vec normal_vector;
+    vec min;
+    vec max;
     //Plane Base Color
     material * geo_material;
     //bounding box

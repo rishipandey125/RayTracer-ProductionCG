@@ -133,7 +133,7 @@ class diffuse_light: public material {
     virtual bool scatter(ray &casted_ray, hit_record &rec, ray &next_ray) {
       return false;
     }
-    virtual color emitted() const override {
+    virtual color emitted() const {
       return emitt_color;
     }
     color emitt_color;

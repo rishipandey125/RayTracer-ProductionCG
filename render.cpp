@@ -117,15 +117,16 @@ color trace(ray &casted_ray, geometry &scene_geometry, int depth) {
   if (scene_geometry.hit(casted_ray,0.001,float(RAND_MAX),rec)) {
     ray next_ray;
     if (rec.geo_material->scatter(casted_ray,rec,next_ray)) {
-      return trace(next_ray,scene_geometry,depth-1)*rec.geo_material->base_color;
+      return trace(next_ray,scene_geometry,depth-1)*rec.geo_material->base_color + rec.geo_material->emitted();
     } else {
-      return color(0,0,0);
+      return rec.geo_material->emitted();
     }
   }
   //gradient sky (global illumination)
   vec unit_direction = casted_ray.direction;
   unit_direction.unit();
   float val = (unit_direction.y+1.0)/2.0;
+  // return color();
   return color(1.0, 1.0, 1.0)*(1-val) + color(0.5, 0.7, 1.0)*val;
 }
 
@@ -150,22 +151,24 @@ void render_frame() {
   // Creating Scene Geometry
   // hittables scene_geometry = load_obj_file("teapot.obj");
   //Creating a Camera
-  camera cam(point(0,0,0),point(0,0,-1),4.0/3.0,90,0);
+  camera cam(point(0,0,0),point(0,0,-1),4.0/3.0,90.0,0);
   //Image Sizes
   int image_width = 1000;
 
   int image_height = (int)(image_width/cam.aspect_ratio);
   // Creating Scene Geometry
   hittables scene_geometry;
+  //top light source
+  scene_geometry.add(new plane(point(-0.5,0,-2),point(-0.5,0.5,-2),point(0,0.5,-2),point(0,0,-2),new diffuse(color(1,1,1))));
   scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(.75,.75,.75))));
   scene_geometry.add(new sphere(point(1,0,-2),0.5,new diffuse(color(1,0,0))));
-  scene_geometry.add(new sphere(point(-1,0,-2),0.5,new diffuse(color(0,1,0))));
+  scene_geometry.add(new sphere(point(0.0,0,-2),0.5,new diffuse(color(0,1,0))));
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 100;
+  int samples = 50;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
