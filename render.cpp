@@ -149,7 +149,7 @@ color output_color(color &pixel, int samples) {
 //Function to Render Image
 void render_frame() {
   // Creating Scene Geometry
-  // hittables scene_geometry = load_obj_file("teapot.obj");
+  // hittables scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
   camera cam(point(0,0,0),point(0,0,-1),4.0/3.0,90.0,0);
   //Image Sizes
@@ -158,17 +158,30 @@ void render_frame() {
   int image_height = (int)(image_width/cam.aspect_ratio);
   // Creating Scene Geometry
   hittables scene_geometry;
+  //floor
+  scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(.75,.75,.75))));
   //top light source
   scene_geometry.add(new plane(point(-1,1.5,-2),point(1,1.5,-2),point(-1,1.5,-3),point(1,1.5,-3),new diffuse_light(color(1,1,1))));
-  scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(.75,.75,.75))));
-  scene_geometry.add(new sphere(point(1,0,-2.5),0.5,new diffuse(color(1,0,0))));
-  scene_geometry.add(new sphere(point(0.0,0,-2.5),0.5,new diffuse(color(0,1,0))));
+  //right light source
+  scene_geometry.add(new plane(point(1,0,-2),point(1.5,0,-1.5),point(1,1,-2),point(1.5,1,-1.5),new diffuse_light(color(1,1,1))));
+  //left light
+  scene_geometry.add(new plane(point(-1,0,-2),point(-1.5,0,-1.5),point(-1,1,-2),point(-1.5,1,-1.5),new diffuse_light(color(1,1,1))));
+
+  scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
+  scene_geometry.add(new sphere(point(0,0,-1),-0.49,new dielectric(1.5)));
+  scene_geometry.add(new sphere(point(1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
+  scene_geometry.add(new sphere(point(-1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
+  scene_geometry.add(new sphere(point(1,0,-1),0.3,new diffuse(color(0,0,1))));
+  scene_geometry.add(new sphere(point(-1,0,-1),0.3,new diffuse(color(0,0,1))));
+  scene_geometry.add(new sphere(point(0,0,-3),0.5,new metal(color(.75,.75,.75),0.2)));
+
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
   int samples = 100;
+  int depth = 50;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
     for (int i = 0; i < image_width; i++) {
@@ -181,7 +194,7 @@ void render_frame() {
           //cast ray into the scene
         ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-        shade = shade + trace(casted_ray,tree,50);
+        shade = shade + trace(casted_ray,tree,depth);
       }
       //get the correct output color
       color output = output_color(shade,samples);
