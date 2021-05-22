@@ -13,7 +13,6 @@ class camera {
     //Camera Parameters
     point origin;
     point look_at;
-    float focus_distance;
     float aspect_ratio;
     float viewport_height;
     float lens_radius;

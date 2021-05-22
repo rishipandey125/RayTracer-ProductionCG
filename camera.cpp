@@ -15,19 +15,23 @@ camera::camera(point camera_origin, point camera_look_at, float camera_aspect_ra
       float v_fov, float apeture) {
   this->origin = camera_origin;
   this->look_at = camera_look_at;
-  this->focus_distance = (camera_origin-camera_look_at).length();
+  //calculate the focus distance length(where the camera is - what it is looking at)
+  float focus_distance = (camera_origin-camera_look_at).length();
+  //lens radius for how big the lens is based from aperture
   this->lens_radius = apeture/2.0;
   this->aspect_ratio = camera_aspect_ratio;
+  //theta angle for FOV
   float theta = v_fov * (M_PI/180.0);
+  //vector math for setting up the viewport
   this->viewport_height = 2.0 * tan(theta/2.0);
   this->viewport_width = this->viewport_height*this->aspect_ratio;
-  this->horizontal = vec(this->viewport_width,0,0);
-  this->vertical = vec(0,this->viewport_height,0);
   this->w = camera_origin-camera_look_at;
-  w.unit();
-  this->u = vec(0,1,0).cross(this->w); u.unit();
+  this->w.unit();
+  this->u = vec(0,1,0).cross(this->w); this->u.unit();
   this->v = this->w.cross(this->u);
-  this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-(this->w);
+  this->horizontal = this->u * focus_distance * this->viewport_width;
+  this->vertical = this->v * focus_distance * this->viewport_height;
+  this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-(this->w*focus_distance);
 
 }
 
@@ -38,9 +42,11 @@ Cast Perspective Ray Function:
 @return: a ray with its origin at the camera's origin and direction through the viewport
 */
 ray camera::cast_perspective_ray(float &u, float &v) {
+  //disk lens with lens radius
   vec lens = random_in_unit_disk()*this->lens_radius;
+  //offset UV value
   vec offset = (this->u*lens.x) + (this->v*lens.y);
   point viewport_point = this->lower_left_corner + (this->horizontal*u) + (this->vertical*v);
   vec direction = viewport_point-this->origin-offset;
-  return ray(this->origin,direction);
+  return ray(this->origin+offset,direction);
 }
