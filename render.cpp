@@ -180,7 +180,7 @@ void render_frame() {
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 100;
+  int samples = 1;
   int depth = 50;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
