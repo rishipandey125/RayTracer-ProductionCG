@@ -31,7 +31,7 @@ bvh::bvh(std::vector <geometry*> scene_geometry, int num_geo) {
   //index for spread
   int spread_index = random_int(0,3);
   point midpoint = get_midpoint(scene_geometry, spread_index);
-  //split the geometry
+  //split the geometry - randomly split along the midpoint in the x,y, or z axis
   for (int i = 0; i < scene_geometry.size(); i++) {
     if (scene_geometry[i]->bounding_box().centroid[spread_index] < midpoint[spread_index]) {
       left_scene_geometry.push_back(scene_geometry[i]);

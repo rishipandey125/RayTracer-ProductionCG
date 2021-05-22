@@ -166,7 +166,7 @@ void render_frame() {
   scene_geometry.add(new plane(point(1,0,-2),point(1.5,0,-1.5),point(1,1,-2),point(1.5,1,-1.5),new diffuse_light(color(1,1,1))));
   //left light
   scene_geometry.add(new plane(point(-1,0,-2),point(-1.5,0,-1.5),point(-1,1,-2),point(-1.5,1,-1.5),new diffuse_light(color(1,1,1))));
-
+  //scene spheres
   scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
   scene_geometry.add(new sphere(point(0,0,-1),-0.49,new dielectric(1.5)));
   scene_geometry.add(new sphere(point(1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
@@ -180,7 +180,7 @@ void render_frame() {
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 1;
+  int samples = 50;
   int depth = 50;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {

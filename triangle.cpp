@@ -70,6 +70,7 @@ bool triangle::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec)
 
 /*
 Getting the Normal Vector of the Triangle
+algorithm for smooth shading FIXME
 @return: normal vector
 */
 vec triangle::get_normal_vector(point &hit_point) const {
