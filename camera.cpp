@@ -27,7 +27,7 @@ camera::camera(point camera_origin, point camera_look_at, float camera_aspect_ra
   w.unit();
   this->u = vec(0,1,0).cross(this->w); u.unit();
   this->v = this->w.cross(this->u);
-  this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-(this->w*this->focus_distance);
+  this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-(this->w);
 
 }
 
