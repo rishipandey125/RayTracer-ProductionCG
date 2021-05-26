@@ -18,7 +18,7 @@ box::box(point min, point max, material * geo_material) {
   //back side
   this->sides.push_back(new plane(vec(min.x,min.y,min.z+depth),vec(min.x,min.y+height,min.z+depth),vec(min.x+width,min.y,min.z+depth),max,geo_material));
   //top face
-  this->sides.push_back(new plane(vec(min.x,min.y+height,min.z),vec(min.x+width,min.y+height,min.z),max,vec(max.x-width,max.y,max.z),geo_material));
+  this->sides.push_back(new plane(vec(min.x,min.y+height,min.z),vec(min.x+width,min.y+height,min.z),vec(min.x,min.y+height,min.z+depth),max,geo_material));
   //bottom face
   this->sides.push_back(new plane(min,vec(min.x+width,min.y,min.z),vec(min.x+width,min.y,min.z+depth),vec(min.x,min.y,min.z+depth),geo_material));
 }
@@ -39,6 +39,7 @@ bool box::hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) cons
 vec box::get_normal_vector(point &point_on_plane) const {
   return vec();
 }
+
 //unused most likely
 material * box::get_material() const {
   return this->geo_material;

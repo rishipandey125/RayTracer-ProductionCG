@@ -65,7 +65,7 @@ void render_frame() {
   // Creating Scene Geometry
   // hittables scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
-  camera cam(point(0,0,0),point(0,0,-1),16.0/9.0,90.0,0.0);
+  camera cam(point(0,0,0),point(0,0,-2),16.0/9.0,90.0,0.0);
   //Image Sizes
   int image_width = 1000;
 
@@ -75,20 +75,20 @@ void render_frame() {
   hittables scene_geometry;
   scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(.75,.75,.75))));
   //top light source
-  scene_geometry.add(new plane(point(-1,1.5,-2),point(1,1.5,-2),point(-1,1.5,-3),point(1,1.5,-3),new diffuse_light(color(1,1,1))));
+  scene_geometry.add(new plane(point(-1,1.5,-1),point(1,1.5,-1),point(-1,1.5,-3),point(1,1.5,-3),new diffuse_light(color(1,1,1))));
   //right light source
   scene_geometry.add(new plane(point(1,0,-2),point(1.5,0,-1.5),point(1,1,-2),point(1.5,1,-1.5),new diffuse_light(color(1,1,1))));
   //left light
   scene_geometry.add(new plane(point(-1,0,-2),point(-1.5,0,-1.5),point(-1,1,-2),point(-1.5,1,-1.5),new diffuse_light(color(1,1,1))));
   //scene spheres
-  scene_geometry.add(new box(point(-1,-1,-1),point(1,1,-2),new diffuse(color(0.578,.439,.856))));
+  scene_geometry.add(new box(point(0,0,-1),point(1,1,-2),new diffuse(color(0.578,.439,.856))));
   // scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
   // scene_geometry.add(new sphere(point(0,0,-1),-0.49,new dielectric(1.5)));
-  scene_geometry.add(new sphere(point(1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
-  scene_geometry.add(new sphere(point(-1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
-  scene_geometry.add(new sphere(point(1,0,-1),0.3,new diffuse(color(0,0,1))));
-  scene_geometry.add(new sphere(point(-1,0,-1),0.3,new diffuse(color(0,0,1))));
-  scene_geometry.add(new sphere(point(0,0,-3),0.5,new metal(color(.75,.75,.75),0.2)));
+  // scene_geometry.add(new sphere(point(1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
+  // scene_geometry.add(new sphere(point(-1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
+  // scene_geometry.add(new sphere(point(1,0,-1),0.3,new diffuse(color(0,0,1))));
+  // scene_geometry.add(new sphere(point(-1,0,-1),0.3,new diffuse(color(0,0,1))));
+  // scene_geometry.add(new sphere(point(0,0,-3),0.5,new metal(color(.75,.75,.75),0.2)));
 
   //Creating BVH
   bvh tree = bvh(scene_geometry.geo,10);
