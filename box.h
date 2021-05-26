@@ -21,7 +21,7 @@ class box : public geometry {
     //Box Material
     material * geo_material;
     //bounding box
-    aabb box;
+    aabb bb;
 };
 
 #endif

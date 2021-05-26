@@ -9,6 +9,7 @@
 #include "camera.cpp"
 #include "sphere.cpp"
 #include "plane.cpp"
+#include "box.cpp"
 #include <vector>
 
 //Render File
@@ -80,8 +81,9 @@ void render_frame() {
   //left light
   scene_geometry.add(new plane(point(-1,0,-2),point(-1.5,0,-1.5),point(-1,1,-2),point(-1.5,1,-1.5),new diffuse_light(color(1,1,1))));
   //scene spheres
-  scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
-  scene_geometry.add(new sphere(point(0,0,-1),-0.49,new dielectric(1.5)));
+  scene_geometry.add(new box(point(-1,-1,-1),point(1,1,-2),new diffuse(color(0.578,.439,.856))));
+  // scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
+  // scene_geometry.add(new sphere(point(0,0,-1),-0.49,new dielectric(1.5)));
   scene_geometry.add(new sphere(point(1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
   scene_geometry.add(new sphere(point(-1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
   scene_geometry.add(new sphere(point(1,0,-1),0.3,new diffuse(color(0,0,1))));
