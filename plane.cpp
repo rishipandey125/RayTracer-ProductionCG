@@ -74,7 +74,7 @@ material * plane::get_material() const {
   return this->geo_material;
 }
 
-//NOT USED
+//Bounding Box of Plane
 aabb plane::bounding_box() const {
   return this->box;
 }
