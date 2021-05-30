@@ -17,7 +17,6 @@ sphere::sphere(point sphere_center, float sphere_radius, material *geo_material)
   this->geo_material = geo_material;
   float r = this->radius;
   vec radius_vec = vec(r,r,r);
-  this->bb = aabb(this->center-radius_vec,this->center+radius_vec);
 }
 
 /*
@@ -65,11 +64,4 @@ vec sphere::get_normal_vector(point &point_on_sphere) const {
 */
 material * sphere::get_material() const {
   return this->geo_material;
-}
-
-/*
-returning the bounding box of the sphere
-*/
-aabb sphere::bounding_box() const {
-  return this->bb;
 }

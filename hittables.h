@@ -13,7 +13,6 @@ class hittables : public geometry {
     bool hit(ray &casted_ray, double t_min, double t_max, hit_record &rec) const override;
     vec get_normal_vector(point &point_on_sphere) const override;
     material * get_material() const override;
-    aabb bounding_box() const override;
     void add(geometry * object);
     //Member Variables
     std::vector<geometry*> geo;

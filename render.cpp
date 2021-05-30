@@ -1,15 +1,11 @@
-// #include <iostream>
+#include <iostream>
 #include "vec.cpp"
 #include "ray.cpp"
-#include "aabb.cpp"
 #include "random.cpp"
 #include "geometry.h"
 #include "hittables.cpp"
-#include "bvh.cpp"
 #include "camera.cpp"
 #include "sphere.cpp"
-#include "plane.cpp"
-#include "box.cpp"
 #include <vector>
 
 //Render File
@@ -73,24 +69,10 @@ void render_frame() {
   // Creating Scene Geometry
   //floor
   hittables scene_geometry;
-  //top light source
-  // scene_geometry.add(new plane(point(-1,1.5,-1),point(1,1.5,-1),point(-1,1.5,-2),point(1,1.5,-2),new diffuse_light(color(1,1,1))));
-  //right light source
-  // scene_geometry.add(new plane(point(1,0,-2),point(1.5,0,-1.5),point(1,1,-2),point(1.5,1,-1.5),new diffuse_light(color(1,1,1))));
-  //left light
-  // scene_geometry.add(new plane(point(-1,0,-2),point(-1.5,0,-1.5),point(-1,1,-2),point(-1.5,1,-1.5),new diffuse_light(color(1,1,1))));
-  //scene spheres
-  // scene_geometry.add(new box(point(0,0,-1),point(1,1,-2),new metal(color(.75,.75,.75),0.2)));
-  // scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
-  // scene_geometry.add(new sphere(point(0,0,-1),-0.49,new dielectric(1.5)));
-  // scene_geometry.add(new sphere(point(1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
-  scene_geometry.add(new sphere(point(-1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
-  // scene_geometry.add(new sphere(point(1,0,-1),0.3,new diffuse(color(0,0,1))));
-  // scene_geometry.add(new sphere(point(-1,0,-1),0.3,new diffuse(color(0,0,1))));
-  // scene_geometry.add(new sphere(point(0,0,-3),0.5,new metal(color(.75,.75,.75),0.2)));
+  scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(0.7,.7,.7))));
+  scene_geometry.add(new sphere(point(0,0,-1),0.5,new diffuse(color(0.578,.439,.856))));
 
   //Creating BVH
-  bvh tree = bvh(scene_geometry.geo,10);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
@@ -108,7 +90,7 @@ void render_frame() {
           //cast ray into the scene
         ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-        shade = shade + trace(casted_ray,tree,depth);
+        shade = shade + trace(casted_ray,scene_geometry,depth);
       }
       //get the correct output color
       color output = output_color(shade,samples);

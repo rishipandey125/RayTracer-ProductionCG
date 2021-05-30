@@ -44,17 +44,3 @@ vec hittables::get_normal_vector(point &point_on_sphere) const {
 material * hittables::get_material() const {
   return new material();
 }
-
-/*
-Hittables Bounding Box
-@return the bounding box of the list of geo in the hittables object
-*/
-aabb hittables::bounding_box() const {
-  aabb first_box = aabb();
-  aabb output_box = aabb();
-  for (int i = 0; i < (this->geo).size(); i++) {
-    first_box = (this->geo)[i]->bounding_box();
-    output_box = output_box.surrounding_box(first_box);
-  }
-  return output_box;
-}
