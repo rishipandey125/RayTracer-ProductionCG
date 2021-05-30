@@ -1,4 +1,4 @@
-#include <iostream>
+// #include <iostream>
 #include "vec.cpp"
 #include "ray.cpp"
 #include "aabb.cpp"
@@ -40,8 +40,8 @@ color trace(ray &casted_ray, geometry &scene_geometry, int depth) {
   vec unit_direction = casted_ray.direction;
   unit_direction.unit();
   float val = (unit_direction.y+1.0)/2.0;
-  return color();
-  // return color(1.0, 1.0, 1.0)*(1-val) + color(0.5, 0.7, 1.0)*val;
+  // return color();
+  return color(1.0, 1.0, 1.0)*(1-val) + color(0.5, 0.7, 1.0)*val;
 }
 
 /*
@@ -65,7 +65,7 @@ void render_frame() {
   // Creating Scene Geometry
   // hittables scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
-  camera cam(point(-2,1,0),point(0,0,-1),16.0/9.0,90.0,0.0);
+  camera cam(point(0,0,0),point(0,0,-1),16.0/9.0,90.0,0.0);
   //Image Sizes
   int image_width = 1000;
 
@@ -73,15 +73,14 @@ void render_frame() {
   // Creating Scene Geometry
   //floor
   hittables scene_geometry;
-  scene_geometry.add(new box(point(-10,-10,10),point(10,10,-10),new diffuse(color(.75,.75,.75))));
   //top light source
-  scene_geometry.add(new plane(point(-1,1.5,-1),point(1,1.5,-1),point(-1,1.5,-2),point(1,1.5,-2),new diffuse_light(color(1,1,1))));
+  // scene_geometry.add(new plane(point(-1,1.5,-1),point(1,1.5,-1),point(-1,1.5,-2),point(1,1.5,-2),new diffuse_light(color(1,1,1))));
   //right light source
   // scene_geometry.add(new plane(point(1,0,-2),point(1.5,0,-1.5),point(1,1,-2),point(1.5,1,-1.5),new diffuse_light(color(1,1,1))));
   //left light
-  scene_geometry.add(new plane(point(-1,0,-2),point(-1.5,0,-1.5),point(-1,1,-2),point(-1.5,1,-1.5),new diffuse_light(color(1,1,1))));
+  // scene_geometry.add(new plane(point(-1,0,-2),point(-1.5,0,-1.5),point(-1,1,-2),point(-1.5,1,-1.5),new diffuse_light(color(1,1,1))));
   //scene spheres
-  scene_geometry.add(new box(point(0,0,-1),point(1,1,-2),new metal(color(.75,.75,.75),0.2)));
+  // scene_geometry.add(new box(point(0,0,-1),point(1,1,-2),new metal(color(.75,.75,.75),0.2)));
   // scene_geometry.add(new sphere(point(0,0,-1),0.5,new dielectric(1.5)));
   // scene_geometry.add(new sphere(point(0,0,-1),-0.49,new dielectric(1.5)));
   // scene_geometry.add(new sphere(point(1,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
