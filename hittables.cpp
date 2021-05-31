@@ -12,6 +12,12 @@ hittables::hittables(geometry * object) {
 hittables::hittables(std::vector<geometry*> scene_geo) {
   this->geo = scene_geo;
 }
+
+hittables::~hittables() {
+  for (int x = 0; x < this->geo.size(); x++) {
+    delete this->geo[x];
+  }
+}
 //adding a geo to the scene
 void hittables::add(geometry * object) {
   this->geo.push_back(object);

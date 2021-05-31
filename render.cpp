@@ -100,4 +100,5 @@ void render_frame() {
       std::cout << r << ' ' << g << ' ' << b << '\n';
     }
   }
+
 }
