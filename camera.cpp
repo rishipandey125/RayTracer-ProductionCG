@@ -7,9 +7,9 @@ camera::camera(){}
 Specific Constructor:
 @param camera_origin: a point specifying the camera's origin
 @param camera_look_at: point specifying where the camera should look
-@camera_focal_length: float specifying the focal length of the camera
-@camera_aspect_ratio: float specifying the aspect ratio of the image outputed by the camera sensor
-@camera_viewport_height: float specifying the height of the viewport
+@param camera_aspect_ratio: float specifying the aspect ratio of the image outputed by the camera sensor
+@param v_fov: float specifying the vertical field of view for the camera
+@param aperture: controlling dof of the camera
 */
 camera::camera(point camera_origin, point camera_look_at, float camera_aspect_ratio,
       float v_fov, float apeture) {
