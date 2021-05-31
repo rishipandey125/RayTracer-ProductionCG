@@ -59,7 +59,6 @@ color output_color(color &pixel, int samples) {
 //Function to Render Image
 void render_frame() {
   // Creating Scene Geometry
-  // hittables scene_geometry = load_obj_file("dragon.obj");
   //Creating a Camera
   camera cam(point(0,0,0),point(0,0,-1),16.0/9.0,90.0,0.0);
   //Image Sizes
