@@ -13,8 +13,10 @@ hittables::hittables(std::vector<geometry*> scene_geo) {
   this->geo = scene_geo;
 }
 
+//destructor for deleting the scene geometry and materials on the heap to prevent mem leaks
 hittables::~hittables() {
   for (int x = 0; x < this->geo.size(); x++) {
+    delete this->geo[x]->get_material();
     delete this->geo[x];
   }
 }
