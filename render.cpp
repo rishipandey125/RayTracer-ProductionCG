@@ -2,6 +2,7 @@
 #include "vec.cpp"
 #include "ray.cpp"
 #include "random.cpp"
+#include "aabb.cpp"
 #include "geometry.h"
 #include "hittables.cpp"
 #include "camera.cpp"

@@ -32,7 +32,6 @@ camera::camera(point camera_origin, point camera_look_at, float camera_aspect_ra
   this->horizontal = this->u * focus_distance * this->viewport_width;
   this->vertical = this->v * focus_distance * this->viewport_height;
   this->lower_left_corner = this->origin-(this->horizontal/2.0)-(this->vertical/2.0)-(this->w*focus_distance);
-
 }
 
 /*
