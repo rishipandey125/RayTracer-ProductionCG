@@ -1,7 +1,7 @@
 #include "aabb.h"
 aabb::aabb() {}
 
-aabb::aabb(point &bottom_left, point &top_right) {
+aabb::aabb(point bottom_left, point top_right) {
   this->min = bottom_left;
   this->max = top_right;
   this->centroid = (bottom_left+top_right)*0.5;
@@ -13,7 +13,7 @@ void aabb::operator=(const aabb &box) {
   this->centroid = box.centroid;
 }
 
-bool aabb::hit(ray &casted_ray, float &t_min, float &t_max) {
+bool aabb::check_hit(ray &casted_ray, float t_min, float t_max) {
   for (int i = 0; i < 3; i++) {
     float min_val = (this->min[i]-casted_ray.origin[i]) / casted_ray.direction[i];
     float max_val = (this->max[i]-casted_ray.origin[i]) / casted_ray.direction[i];

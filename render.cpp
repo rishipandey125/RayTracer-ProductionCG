@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "vec.cpp"
 #include "ray.cpp"
 #include "random.cpp"
@@ -7,7 +8,7 @@
 #include "hittables.cpp"
 #include "camera.cpp"
 #include "sphere.cpp"
-#include <vector>
+#include "bvh.cpp"
 
 //Render File
 //Constant Epsilon
@@ -69,14 +70,26 @@ void render_frame() {
   // Creating Scene Geometry
   //floor
   hittables scene_geometry;
-  scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(0.7,.7,.7))));
-  scene_geometry.add(new sphere(point(0,0,-1),0.5,new diffuse(color(0.578,.439,.856))));
+  for (int i = 0; i < 1000; i++) {
+    float x = random_float(-5,5);
+    float y = random_float(-3,3);
+    float z = random_float(0,-10);
+    float r = random_float(0.1,0.3);
+    scene_geometry.add(new sphere(point(x,y,z),r,new diffuse(color(random_float(),random_float(),random_float()))));
+  }
+  // scene_geometry.add(new sphere(point(0,-100.5,-1),100,new diffuse(color(0.7,.7,.7))));
+  // scene_geometry.add(new sphere(point(0,0,-1),0.5,new diffuse(color(0.578,.439,.856))));
+  // scene_geometry.add(new sphere(point(-2,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
+  // scene_geometry.add(new sphere(point(2,0,-2),0.5,new diffuse(color(0.578,.439,.856))));
+  // scene_geometry.add(new sphere(point(-4,0,-3),0.5,new diffuse(color(0.578,.439,.856))));
+  // scene_geometry.add(new sphere(point(4,0,-3),0.5,new diffuse(color(0.578,.439,.856))));
 
+  bvh acceleration_tree = bvh(scene_geometry.geo,50);
   //Creating BVH
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
-  int samples = 50;
+  int samples = 1;
   int depth = 50;
   //Iterating Through Image Size
   for (int j = image_height-1; j >= 0; j--) {
@@ -90,7 +103,7 @@ void render_frame() {
           //cast ray into the scene
         ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-        shade = shade + trace(casted_ray,scene_geometry,depth);
+        shade = shade + trace(casted_ray,acceleration_tree,depth);
       }
       //get the correct output color
       color output = output_color(shade,samples);
