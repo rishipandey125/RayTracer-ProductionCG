@@ -62,3 +62,11 @@ aabb hittables::get_bounding_box() const {
   }
   return output_box;
 }
+
+geometry * hittables::get_left() const {
+  return NULL;
+}
+
+geometry * hittables::get_right() const {
+  return NULL;
+}

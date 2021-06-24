@@ -11,6 +11,8 @@ class sphere : public geometry {
     vec get_normal_vector(point &point_on_sphere) const override;
     material * get_material() const override;
     aabb get_bounding_box() const override;
+    geometry * get_left() const override;
+    geometry * get_right() const override;
     //Member Variables
     point center;
     float radius;

@@ -70,3 +70,11 @@ material * sphere::get_material() const {
 aabb sphere::get_bounding_box() const {
   return this->bounding_box;
 }
+
+geometry * sphere::get_left() const {
+  return NULL;
+}
+
+geometry * sphere::get_right() const {
+  return NULL;
+}

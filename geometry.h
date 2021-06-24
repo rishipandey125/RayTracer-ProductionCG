@@ -11,6 +11,8 @@ class geometry {
     virtual vec get_normal_vector(point &point_on_surface) const = 0;
     virtual material * get_material() const = 0;
     virtual aabb get_bounding_box() const = 0;
+    virtual geometry * get_left() const = 0;
+    virtual geometry * get_right() const = 0;
 };
 
 #endif
