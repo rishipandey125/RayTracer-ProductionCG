@@ -78,3 +78,12 @@ geometry * sphere::get_left() const {
 geometry * sphere::get_right() const {
   return NULL;
 }
+
+bool sphere::is_leaf() const {
+  return false;
+}
+
+std::vector<geometry*> sphere::get_geo() const {
+  std::vector<geometry*> empty_list;
+  return empty_list;
+}

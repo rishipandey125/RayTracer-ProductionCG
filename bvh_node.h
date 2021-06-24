@@ -15,6 +15,8 @@ class bvh_node : public geometry {
     aabb get_bounding_box() const override;
     geometry * get_left() const override;
     geometry * get_right() const override;
+    bool is_leaf() const override;
+    std::vector<geometry*> get_geo() const override;
     //Member Variables
     geometry *left;
     geometry *right;

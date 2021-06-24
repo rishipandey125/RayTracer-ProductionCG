@@ -8,7 +8,8 @@
 #include "hittables.cpp"
 #include "camera.cpp"
 #include "sphere.cpp"
-#include "bvh.cpp"
+#include "bvh_node.cpp"
+#include "bvh_tree.cpp"
 
 //Render File
 //Constant Epsilon
@@ -70,7 +71,7 @@ void render_frame() {
   // Creating Scene Geometry
   //floor
   hittables scene_geometry;
-  for (int i = 0; i < 24; i++) {
+  for (int i = 0; i < 1000; i++) {
     float x = random_float(-5,5);
     float y = random_float(-3,3);
     float z = random_float(0,-10);
@@ -84,7 +85,7 @@ void render_frame() {
   // scene_geometry.add(new sphere(point(-4,0,-3),0.5,new diffuse(color(0.578,.439,.856))));
   // scene_geometry.add(new sphere(point(4,0,-3),0.5,new diffuse(color(0.578,.439,.856))));
 
-  bvh acceleration_tree = bvh(scene_geometry.geo,3);
+  // bvh_tree acceleration_tree = bvh_tree(scene_geometry.geo,50);
   //Creating BVH
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -103,7 +104,7 @@ void render_frame() {
           //cast ray into the scene
         ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-        shade = shade + trace(casted_ray,acceleration_tree,depth);
+        shade = shade + trace(casted_ray,scene_geometry,depth);
       }
       //get the correct output color
       color output = output_color(shade,samples);

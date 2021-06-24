@@ -162,5 +162,6 @@ void vec::root() {
 
 //Prints the vector for debugging
 void vec::print() {
-  std::cout << "<" <<  this->x << "," << this->y << "," << this->z << ">" << std::endl;
+  std::cout << this->x * this->y * this->z << std::endl;
+  // std::cout << "<" <<  this->x << "," << this->y << "," << this->z << ">" << std::endl;
 }

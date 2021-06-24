@@ -13,13 +13,14 @@ hittables::hittables(std::vector<geometry*> scene_geo) {
   this->geo = scene_geo;
 }
 
-//destructor for deleting the scene geometry and materials on the heap to prevent mem leaks
-hittables::~hittables() {
-  for (int x = 0; x < this->geo.size(); x++) {
-    delete this->geo[x]->get_material();
-    delete this->geo[x];
-  }
-}
+// //destructor for deleting the scene geometry and materials on the heap to prevent mem leaks
+// hittables::~hittables() {
+//   for (int x = 0; x < this->geo.size(); x++) {
+//     delete this->geo[x]->get_material();
+//     delete this->geo[x];
+//   }
+// }
+
 //adding a geo to the scene
 void hittables::add(geometry * object) {
   this->geo.push_back(object);
@@ -69,4 +70,12 @@ geometry * hittables::get_left() const {
 
 geometry * hittables::get_right() const {
   return NULL;
+}
+
+bool hittables::is_leaf() const {
+  return true;
+}
+
+std::vector<geometry*> hittables::get_geo() const {
+  return this->geo;
 }

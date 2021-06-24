@@ -3,7 +3,7 @@
 #include "material.h"
 
 
-//Geometry Parent Class: Virtual Functions Overriden by Geometry Children (Sphere,Plane,Triangle)
+//Geometry Parent Class: Virtual Functions Overriden by Geometry Children (Sphere,bvh_node,bvh_tree,Hittables)
 class geometry {
   public:
     virtual ~geometry() = default;
@@ -13,6 +13,8 @@ class geometry {
     virtual aabb get_bounding_box() const = 0;
     virtual geometry * get_left() const = 0;
     virtual geometry * get_right() const = 0;
+    virtual bool is_leaf() const = 0;
+    virtual std::vector<geometry*> get_geo() const = 0;
 };
 
 #endif

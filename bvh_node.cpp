@@ -123,3 +123,12 @@ geometry * bvh_node::get_left() const {
 geometry * bvh_node::get_right() const {
   return this->right;
 }
+
+bool bvh_node::is_leaf() const {
+  return false;
+}
+
+std::vector<geometry*> bvh_node::get_geo() const {
+  std::vector<geometry*> empty_list;
+  return empty_list;
+}

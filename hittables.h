@@ -7,7 +7,7 @@ class hittables : public geometry {
     //Constructors
     hittables();
     //Destructor
-    ~hittables();
+    // ~hittables();
     //This Builds the Hittable Lists
     hittables(geometry * object);
     hittables(std::vector<geometry*> scene_geo);
@@ -18,6 +18,8 @@ class hittables : public geometry {
     aabb get_bounding_box() const override;
     geometry * get_left() const override;
     geometry * get_right() const override;
+    bool is_leaf() const override;
+    std::vector<geometry*> get_geo() const override;
     void add(geometry * object);
     //Member Variables
     std::vector<geometry*> geo;
