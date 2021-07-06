@@ -54,30 +54,6 @@ bvh_node::bvh_node(std::vector <geometry*> scene_geometry, int num_geo) {
   this->box = left_box.surrounding_box(right_box);
 }
 
-// void destroy_bvh_node_tree(geometry *bvh_node_node) {
-//   if (bvh_node_node == NULL)
-//     return;
-//   destroy_bvh_node_tree(bvh_node_node->get_left());
-//   destroy_bvh_node_tree(bvh_node_node->get_right());
-//   std::cout << "deleted node" << std::endl;
-//   delete bvh_node_node;
-//   // if (bvh_node_node->get_left() != NULL) {
-//   //   destroy_bvh_node_tree(bvh_node_node->get_left());
-//   // }
-//   // if (bvh_node_node->get_right() != NULL) {
-//   //   destroy_bvh_node_tree(bvh_node_node->get_right());
-//   // }
-//   // std::cout << "deleted node" << std::endl;
-//   // delete bvh_node_node;
-// }
-//
-// bvh_node::~bvh_node() {
-//   //i think the issue is that the first node is not a pointer
-//   //the first node (top node) is just a creation -> the rest are pointers
-//   destroy_bvh_node_tree(this->left);
-//   destroy_bvh_node_tree(this->right);
-// }
-
 /*
 bvh_node Hit Function
 @param casted_ray: ray casted into the scene
@@ -116,18 +92,22 @@ aabb bvh_node::get_bounding_box() const {
   return this->box;
 }
 
+//returns the left node from this node
 geometry * bvh_node::get_left() const {
   return this->left;
 }
 
+//returns the right node from this node
 geometry * bvh_node::get_right() const {
   return this->right;
 }
 
+//specifies whether the node is a leaf or not (IT ISN'T!)
 bool bvh_node::is_leaf() const {
   return false;
 }
 
+//not used
 std::vector<geometry*> bvh_node::get_geo() const {
   std::vector<geometry*> empty_list;
   return empty_list;

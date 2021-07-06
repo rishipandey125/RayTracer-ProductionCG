@@ -67,22 +67,27 @@ material * sphere::get_material() const {
   return this->geo_material;
 }
 
+//return bounding box of sphere
 aabb sphere::get_bounding_box() const {
   return this->bounding_box;
 }
 
+//not used
 geometry * sphere::get_left() const {
   return NULL;
 }
 
+//not used
 geometry * sphere::get_right() const {
   return NULL;
 }
 
+//not used
 bool sphere::is_leaf() const {
   return false;
 }
 
+//not used
 std::vector<geometry*> sphere::get_geo() const {
   std::vector<geometry*> empty_list;
   return empty_list;

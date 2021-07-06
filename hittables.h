@@ -6,8 +6,7 @@ class hittables : public geometry {
   public:
     //Constructors
     hittables();
-    //Destructor
-    // ~hittables();
+
     //This Builds the Hittable Lists
     hittables(geometry * object);
     hittables(std::vector<geometry*> scene_geo);

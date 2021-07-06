@@ -13,14 +13,6 @@ hittables::hittables(std::vector<geometry*> scene_geo) {
   this->geo = scene_geo;
 }
 
-// //destructor for deleting the scene geometry and materials on the heap to prevent mem leaks
-// hittables::~hittables() {
-//   for (int x = 0; x < this->geo.size(); x++) {
-//     delete this->geo[x]->get_material();
-//     delete this->geo[x];
-//   }
-// }
-
 //adding a geo to the scene
 void hittables::add(geometry * object) {
   this->geo.push_back(object);
@@ -64,18 +56,22 @@ aabb hittables::get_bounding_box() const {
   return output_box;
 }
 
+//is a leaf node so get the left node
 geometry * hittables::get_left() const {
   return NULL;
 }
 
+//is a leaf node so no right node
 geometry * hittables::get_right() const {
   return NULL;
 }
 
+//it is a leaf since it is a hittables
 bool hittables::is_leaf() const {
   return true;
 }
 
+//returns the scene geo for the deletion process
 std::vector<geometry*> hittables::get_geo() const {
   return this->geo;
 }

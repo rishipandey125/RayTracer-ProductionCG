@@ -71,7 +71,7 @@ void render_frame() {
   // Creating Scene Geometry
   //floor
   hittables scene_geometry;
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 5000; i++) {
     float x = random_float(-5,5);
     float y = random_float(-3,3);
     float z = random_float(0,-10);
@@ -85,8 +85,8 @@ void render_frame() {
   // scene_geometry.add(new sphere(point(-4,0,-3),0.5,new diffuse(color(0.578,.439,.856))));
   // scene_geometry.add(new sphere(point(4,0,-3),0.5,new diffuse(color(0.578,.439,.856))));
 
-  // bvh_tree acceleration_tree = bvh_tree(scene_geometry.geo,50);
   //Creating BVH
+  bvh_tree acceleration_tree = bvh_tree(scene_geometry.geo,100);
   //Setting Up PPM Output
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
   //Number of Samples per Pixel
@@ -104,7 +104,7 @@ void render_frame() {
           //cast ray into the scene
         ray casted_ray = cam.cast_perspective_ray(u,v);
           //trace some gosh darn rays
-        shade = shade + trace(casted_ray,scene_geometry,depth);
+        shade = shade + trace(casted_ray,acceleration_tree,depth);
       }
       //get the correct output color
       color output = output_color(shade,samples);
